@@ -110,7 +110,7 @@
     <div class="fg"><label>Senha</label><input type="password" id="lp" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="btn-login" id="btn-login" onclick="doLogin()">Entrar no Painel</button>
     <div class="login-err" id="lerr">Usuário ou senha incorretos.</div>
-    <div class="login-hint">Senha padrão: <code>admin123</code> — altere nas Configurações</div>
+    <div class="login-hint">Senha padrão: <code>admin123</code> — sincronizada via Supabase em todos os dispositivos</div>
   </div>
 </div>
 
@@ -318,37 +318,70 @@ async function sbSave(cfg) {
   } catch(e){return false;}
 }
 
-// AUTH
-const DEFAULT_PW='admin123';
-const getPw=()=>localStorage.getItem('iaem30_pw')||DEFAULT_PW;
+// AUTH — senha sincronizada via Supabase (hash SHA-256)
+const DEFAULT_HASH='240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'; // admin123
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function getRemoteHash() {
+  // Reads adminPasswordHash from the config stored in Supabase
+  try {
+    const r = await fetch(`${SB}/rest/v1/iaem30_config?id=eq.1&select=config`,{headers:H});
+    const rows = await r.json();
+    return rows?.[0]?.config?.adminPasswordHash || DEFAULT_HASH;
+  } catch(e) {
+    // Fallback: check localStorage cache
+    return localStorage.getItem('iaem30_pw_hash') || DEFAULT_HASH;
+  }
+}
 
 async function doLogin() {
   const u=document.getElementById('lu').value.trim();
   const p=document.getElementById('lp').value;
   const btn=document.getElementById('btn-login');
-  if(u==='admin'&&p===getPw()){
-    btn.disabled=true; btn.textContent='Carregando…';
+  btn.disabled=true; btn.textContent='Verificando…';
+  const inputHash = await sha256(p);
+  const remoteHash = await getRemoteHash();
+  if(u==='admin' && inputHash===remoteHash){
+    localStorage.setItem('iaem30_pw_hash', remoteHash); // cache local
     sessionStorage.setItem('ia_ok','1');
     document.getElementById('login-screen').style.display='none';
     document.getElementById('admin-screen').style.display='flex';
     await init();
   } else {
+    btn.disabled=false; btn.textContent='Entrar no Painel';
     const e=document.getElementById('lerr'); e.style.display='block';
     setTimeout(()=>e.style.display='none',3000);
   }
 }
+
 function doLogout(){sessionStorage.removeItem('ia_ok');location.reload();}
-function changePw(){
+
+async function changePw(){
   const o=document.getElementById('s-old').value;
   const n=document.getElementById('s-new').value;
   const c=document.getElementById('s-cf').value;
-  if(o!==getPw()){toast('Senha atual incorreta','error');return;}
+  const oldHash = await sha256(o);
+  const remoteHash = await getRemoteHash();
+  if(oldHash!==remoteHash){toast('Senha atual incorreta','error');return;}
   if(n.length<6){toast('Mínimo 6 caracteres','error');return;}
   if(n!==c){toast('Senhas não coincidem','error');return;}
-  localStorage.setItem('iaem30_pw',n);
-  toast('Senha alterada!');
+  const newHash = await sha256(n);
+  // Save hash inside the config JSON in Supabase
+  C.adminPasswordHash = newHash;
+  const ok = await sbSave(C);
+  if(ok){
+    localStorage.setItem('iaem30_pw_hash', newHash);
+    toast('✓ Senha alterada e sincronizada em todos os dispositivos!');
+  } else {
+    toast('Erro ao salvar no Supabase. Tente novamente.','error');
+  }
   ['s-old','s-new','s-cf'].forEach(id=>document.getElementById(id).value='');
 }
+
 window.addEventListener('load',()=>{
   if(sessionStorage.getItem('ia_ok')==='1'){
     document.getElementById('login-screen').style.display='none';
