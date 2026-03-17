@@ -7,391 +7,148 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #0a0a0f;
-      --surface: #12121a;
-      --surface2: #1a1a26;
-      --surface3: #22223a;
-      --border: rgba(255,255,255,0.07);
-      --border2: rgba(255,255,255,0.12);
-      --accent: #7c5cfc;
-      --accent2: #a78bfa;
-      --text: #f0eeff;
-      --muted: #8b86a8;
-      --muted2: #5a5670;
-      --green: #10b981;
-      --red: #ef4444;
-      --gold: #f59e0b;
-      --sidebar-w: 260px;
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; font-size:15px; }
-    h1,h2,h3,h4,h5 { font-family:'Syne',sans-serif; font-weight:700; }
-
-    /* ─── LOGIN SCREEN ─── */
-    #login-screen {
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      background: radial-gradient(ellipse at 50% 0%, rgba(124,92,252,0.1) 0%, transparent 60%);
-    }
-    .login-card {
-      width: 400px;
-      background: var(--surface); border: 1px solid var(--border2);
-      border-radius: 20px; padding: 48px;
-    }
-    .login-logo {
-      font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800;
-      text-align: center; margin-bottom: 8px;
-    }
-    .login-logo span { color: var(--accent); }
-    .login-subtitle { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 36px; }
-    .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
-    .form-group input {
-      width: 100%; padding: 12px 16px;
-      background: var(--surface2); border: 1px solid var(--border2);
-      border-radius: 10px; color: var(--text); font-size: 15px;
-      font-family: 'DM Sans', sans-serif;
-      transition: border-color 0.2s; outline: none;
-    }
-    .form-group input:focus { border-color: var(--accent); }
-    .btn-login {
-      width: 100%; padding: 13px;
-      background: var(--accent); color: #fff;
-      border: none; border-radius: 10px; cursor: pointer;
-      font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
-      transition: all 0.2s;
-    }
-    .btn-login:hover { background: #8b6dfd; }
-    .login-error {
-      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
-      color: var(--red); border-radius: 8px; padding: 10px 14px;
-      font-size: 13px; margin-top: 16px; display: none;
-    }
-    .login-hint { text-align:center; color: var(--muted2); font-size: 12px; margin-top: 16px; }
-
-    /* ─── ADMIN LAYOUT ─── */
-    #admin-screen { display: none; min-height: 100vh; }
-
-    /* Sidebar */
-    .sidebar {
-      position: fixed; top: 0; left: 0; bottom: 0;
-      width: var(--sidebar-w);
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      display: flex; flex-direction: column;
-      z-index: 50;
-    }
-    .sidebar-header {
-      padding: 24px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-    .sidebar-logo { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; }
-    .sidebar-logo span { color: var(--accent); }
-    .sidebar-role { font-size: 11px; color: var(--muted2); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.08em; }
-
-    .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
-    .nav-section-title {
-      font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em;
-      color: var(--muted2); padding: 8px 8px 6px; font-weight: 600;
-    }
-    .nav-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 9px 12px; border-radius: 8px;
-      cursor: pointer; color: var(--muted); font-size: 14px; font-weight: 400;
-      transition: all 0.15s; margin-bottom: 2px;
-    }
-    .nav-item:hover { background: var(--surface2); color: var(--text); }
-    .nav-item.active { background: rgba(124,92,252,0.12); color: var(--accent2); font-weight: 500; }
-    .nav-item svg { flex-shrink: 0; opacity: 0.7; }
-    .nav-item.active svg { opacity: 1; }
-
-    .sidebar-footer {
-      padding: 16px 12px;
-      border-top: 1px solid var(--border);
-      display: flex; flex-direction: column; gap: 8px;
-    }
-    .btn-view-site, .btn-logout {
-      display: flex; align-items: center; gap: 8px;
-      padding: 9px 12px; border-radius: 8px;
-      font-size: 13px; cursor: pointer; transition: all 0.15s;
-      border: none; background: transparent; text-decoration: none;
-      font-family: 'DM Sans', sans-serif; width: 100%;
-    }
-    .btn-view-site { color: var(--accent2); }
-    .btn-view-site:hover { background: rgba(124,92,252,0.1); }
-    .btn-logout { color: var(--red); }
-    .btn-logout:hover { background: rgba(239,68,68,0.08); }
-
-    /* Main content */
-    .main-content {
-      margin-left: var(--sidebar-w);
-      min-height: 100vh;
-      display: flex; flex-direction: column;
-    }
-    .topbar {
-      position: sticky; top: 0; z-index: 40;
-      background: rgba(10,10,15,0.85); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 32px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .topbar-title { font-size: 17px; font-weight: 600; }
-    .topbar-actions { display: flex; gap: 12px; align-items: center; }
-    .btn-save {
-      display: flex; align-items: center; gap: 8px;
-      background: var(--accent); color: #fff;
-      border: none; border-radius: 8px;
-      padding: 9px 20px; cursor: pointer;
-      font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
-      transition: all 0.2s;
-    }
-    .btn-save:hover { background: #8b6dfd; }
-    .btn-save.saving { opacity: 0.7; cursor: wait; }
-    .save-msg {
-      font-size: 13px; color: var(--green);
-      opacity: 0; transition: opacity 0.3s;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .save-msg.show { opacity: 1; }
-    .btn-reset {
-      background: transparent; border: 1px solid var(--border2);
-      color: var(--muted); padding: 9px 16px; border-radius: 8px;
-      cursor: pointer; font-size: 13px; transition: all 0.2s;
-    }
-    .btn-reset:hover { border-color: var(--red); color: var(--red); }
-
-    /* Panels */
-    .panel { display: none; padding: 32px; flex: 1; }
-    .panel.active { display: block; }
-
-    .panel-grid { display: grid; gap: 24px; }
-    .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 16px; overflow: hidden;
-    }
-    .card-header {
-      padding: 18px 24px;
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .card-header h3 { font-size: 15px; }
-    .card-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
-
-    /* Form elements */
-    .field { display: flex; flex-direction: column; gap: 7px; }
-    .field label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
-    .field input, .field textarea, .field select {
-      background: var(--surface2); border: 1px solid var(--border2);
-      border-radius: 8px; padding: 10px 14px;
-      color: var(--text); font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      outline: none; transition: border-color 0.2s; resize: vertical;
-    }
-    .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent); }
-    .field .hint { font-size: 11px; color: var(--muted2); }
-
-    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-    /* List editors */
-    .list-editor { display: flex; flex-direction: column; gap: 10px; }
-    .list-item {
-      display: flex; gap: 10px; align-items: flex-start;
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 14px;
-    }
-    .list-item-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-    .list-item-body input, .list-item-body textarea {
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: 6px; padding: 8px 12px;
-      color: var(--text); font-size: 13px;
-      font-family: 'DM Sans', sans-serif;
-      outline: none; resize: vertical;
-      transition: border-color 0.2s; width: 100%;
-    }
-    .list-item-body input:focus, .list-item-body textarea:focus { border-color: var(--accent); }
-    .list-item-actions { display: flex; flex-direction: column; gap: 6px; }
-    .btn-icon {
-      background: transparent; border: 1px solid var(--border);
-      color: var(--muted); border-radius: 6px;
-      width: 30px; height: 30px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; transition: all 0.15s; flex-shrink: 0;
-    }
-    .btn-icon:hover { border-color: var(--border2); color: var(--text); }
-    .btn-icon.danger:hover { border-color: var(--red); color: var(--red); }
-    .btn-add {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: transparent; border: 1px dashed var(--border2);
-      color: var(--muted); border-radius: 10px; padding: 10px;
-      cursor: pointer; font-size: 13px; transition: all 0.2s;
-      width: 100%;
-    }
-    .btn-add:hover { border-color: var(--accent2); color: var(--accent2); }
-
-    /* Dashboard overview cards */
-    .overview-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 28px; }
-    .stat-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 14px; padding: 20px;
-    }
-    .stat-card .s-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-    .stat-card .s-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; }
-    .stat-card .s-sub { font-size: 12px; color: var(--muted2); margin-top: 4px; }
-
-    .preview-frame {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 20px;
-      text-align: center; color: var(--muted); font-size: 14px;
-    }
-    .preview-link {
-      color: var(--accent2); text-decoration: none; font-size: 13px;
-      display: inline-flex; align-items: center; gap: 6px;
-    }
-    .preview-link:hover { text-decoration: underline; }
-
-    /* Tag */
-    .tag {
-      display: inline-flex; align-items: center;
-      background: rgba(124,92,252,0.1); color: var(--accent2);
-      border: 1px solid rgba(124,92,252,0.2);
-      border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 500;
-    }
-    .tag.green { background: rgba(16,185,129,0.1); color: var(--green); border-color: rgba(16,185,129,0.2); }
-
-    /* Star selector */
-    .star-row { display: flex; gap: 4px; }
-    .star-btn {
-      background: none; border: none; cursor: pointer;
-      font-size: 18px; color: var(--muted2); transition: color 0.15s; padding: 2px;
-    }
-    .star-btn.on { color: var(--gold); }
-
-    /* Change password */
-    .change-pw-toggle {
-      display: flex; align-items: center; gap: 8px;
-      cursor: pointer; color: var(--muted); font-size: 13px;
-      transition: color 0.2s;
-    }
-    .change-pw-toggle:hover { color: var(--accent2); }
-    .pw-fields { display: none; padding-top: 12px; display: flex; flex-direction: column; gap: 16px; }
-
-    /* Notifications */
-    #toast {
-      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
-      background: var(--surface2); border: 1px solid var(--border2);
-      border-radius: 12px; padding: 14px 20px;
-      display: flex; align-items: center; gap: 10px;
-      font-size: 14px; transform: translateY(80px); opacity: 0;
-      transition: all 0.35s cubic-bezier(.34,1.56,.64,1);
-      pointer-events: none; max-width: 340px;
-    }
-    #toast.show { transform: translateY(0); opacity: 1; }
-    #toast.success { border-color: rgba(16,185,129,0.4); }
-    #toast.error { border-color: rgba(239,68,68,0.4); }
-
-    @media (max-width: 1024px) { .overview-grid { grid-template-columns: 1fr 1fr; } }
+    :root{--bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a26;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--accent:#7c5cfc;--accent2:#a78bfa;--text:#f0eeff;--muted:#8b86a8;--muted2:#5a5670;--green:#10b981;--red:#ef4444;--gold:#f59e0b;--sidebar-w:260px;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;}
+    h1,h2,h3,h4,h5{font-family:'Syne',sans-serif;font-weight:700;}
+    /* LOGIN */
+    #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 0%,rgba(124,92,252,0.1) 0%,transparent 60%);}
+    .login-card{width:400px;background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:48px;}
+    .login-logo{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;text-align:center;margin-bottom:8px;}
+    .login-logo span{color:var(--accent);}
+    .login-sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:36px;}
+    .fg{margin-bottom:20px;}
+    .fg label{display:block;font-size:13px;font-weight:500;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;}
+    .fg input{width:100%;padding:12px 16px;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-size:15px;font-family:'DM Sans',sans-serif;transition:border-color .2s;outline:none;}
+    .fg input:focus{border-color:var(--accent);}
+    .btn-login{width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;transition:all .2s;}
+    .btn-login:hover{background:#8b6dfd;}
+    .btn-login:disabled{opacity:.6;cursor:wait;}
+    .login-err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--red);border-radius:8px;padding:10px 14px;font-size:13px;margin-top:16px;display:none;}
+    .login-hint{text-align:center;color:var(--muted2);font-size:12px;margin-top:16px;}
+    /* ADMIN */
+    #admin-screen{display:none;min-height:100vh;}
+    .sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:50;}
+    .sb-header{padding:24px 20px;border-bottom:1px solid var(--border);}
+    .sb-logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;}
+    .sb-logo span{color:var(--accent);}
+    .sb-role{font-size:11px;color:var(--muted2);margin-top:2px;text-transform:uppercase;letter-spacing:0.08em;}
+    .sb-conn{display:inline-flex;align-items:center;gap:5px;font-size:10px;margin-top:6px;color:var(--muted2);}
+    .sb-dot{width:6px;height:6px;border-radius:50%;background:var(--muted2);transition:background .3s;}
+    .sb-dot.ok{background:var(--green);}
+    .sb-nav{flex:1;padding:16px 12px;overflow-y:auto;}
+    .nav-sec{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted2);padding:8px 8px 6px;font-weight:600;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;color:var(--muted);font-size:14px;transition:all .15s;margin-bottom:2px;}
+    .nav-item:hover{background:var(--surface2);color:var(--text);}
+    .nav-item.active{background:rgba(124,92,252,0.12);color:var(--accent2);font-weight:500;}
+    .sb-foot{padding:16px 12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;}
+    .btn-site,.btn-out{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;font-size:13px;cursor:pointer;transition:all .15s;border:none;background:transparent;text-decoration:none;font-family:'DM Sans',sans-serif;width:100%;}
+    .btn-site{color:var(--accent2);}
+    .btn-site:hover{background:rgba(124,92,252,0.1);}
+    .btn-out{color:var(--red);}
+    .btn-out:hover{background:rgba(239,68,68,0.08);}
+    .main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column;}
+    .topbar{position:sticky;top:0;z-index:40;background:rgba(10,10,15,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;}
+    .topbar-title{font-size:17px;font-weight:600;}
+    .topbar-actions{display:flex;gap:12px;align-items:center;}
+    .btn-save{display:flex;align-items:center;gap:8px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 20px;cursor:pointer;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;transition:all .2s;}
+    .btn-save:hover{background:#8b6dfd;}
+    .btn-save:disabled{opacity:.6;cursor:wait;}
+    .btn-reset{background:transparent;border:1px solid var(--border2);color:var(--muted);padding:9px 16px;border-radius:8px;cursor:pointer;font-size:13px;transition:all .2s;}
+    .btn-reset:hover{border-color:var(--red);color:var(--red);}
+    .panel{display:none;padding:32px;flex:1;}
+    .panel.active{display:block;}
+    .pg{display:grid;gap:24px;}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .card-h{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .card-h h3{font-size:15px;}
+    .card-b{padding:24px;display:flex;flex-direction:column;gap:20px;}
+    .field{display:flex;flex-direction:column;gap:7px;}
+    .field label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;}
+    .field input,.field textarea{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;resize:vertical;}
+    .field input:focus,.field textarea:focus{border-color:var(--accent);}
+    .field .hint{font-size:11px;color:var(--muted2);}
+    .fr{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .le{display:flex;flex-direction:column;gap:10px;}
+    .li{display:flex;gap:10px;align-items:flex-start;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;}
+    .li-body{flex:1;display:flex;flex-direction:column;gap:8px;}
+    .li-body input,.li-body textarea{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;transition:border-color .2s;width:100%;}
+    .li-body input:focus,.li-body textarea:focus{border-color:var(--accent);}
+    .li-acts{display:flex;flex-direction:column;gap:6px;}
+    .btn-ic{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s;flex-shrink:0;}
+    .btn-ic:hover{border-color:var(--border2);color:var(--text);}
+    .btn-ic.d:hover{border-color:var(--red);color:var(--red);}
+    .btn-add{display:flex;align-items:center;justify-content:center;gap:8px;background:transparent;border:1px dashed var(--border2);color:var(--muted);border-radius:10px;padding:10px;cursor:pointer;font-size:13px;transition:all .2s;width:100%;}
+    .btn-add:hover{border-color:var(--accent2);color:var(--accent2);}
+    .og{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+    .sc{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;}
+    .sc .sl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
+    .sc .sv{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;}
+    .sc .ss{font-size:12px;color:var(--muted2);margin-top:4px;}
+    .pf{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;color:var(--muted);font-size:14px;}
+    .pl{color:var(--accent2);text-decoration:none;font-size:13px;display:inline-flex;align-items:center;gap:6px;}
+    .pl:hover{text-decoration:underline;}
+    .tag{display:inline-flex;align-items:center;background:rgba(124,92,252,0.1);color:var(--accent2);border:1px solid rgba(124,92,252,0.2);border-radius:6px;padding:2px 8px;font-size:11px;font-weight:500;}
+    .tag.g{background:rgba(16,185,129,0.1);color:var(--green);border-color:rgba(16,185,129,0.2);}
+    .star-row{display:flex;gap:4px;}
+    .star-btn{background:none;border:none;cursor:pointer;font-size:18px;color:var(--muted2);transition:color .15s;padding:2px;}
+    .star-btn.on{color:var(--gold);}
+    #toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:10px;font-size:14px;transform:translateY(80px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;max-width:360px;}
+    #toast.show{transform:translateY(0);opacity:1;}
+    #toast.success{border-color:rgba(16,185,129,0.4);}
+    #toast.error{border-color:rgba(239,68,68,0.4);}
+    @media(max-width:1024px){.og{grid-template-columns:1fr 1fr;}}
   </style>
 </head>
 <body>
 
-<!-- ═══════ LOGIN ═══════ -->
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">IA<span>em30</span></div>
-    <div class="login-subtitle">Painel de Administração</div>
-    <div class="form-group">
-      <label>Usuário</label>
-      <input type="text" id="login-user" placeholder="admin" autocomplete="username">
-    </div>
-    <div class="form-group">
-      <label>Senha</label>
-      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="btn-login" onclick="doLogin()">Entrar no Painel</button>
-    <div class="login-error" id="login-error">Usuário ou senha incorretos.</div>
+    <div class="login-sub">Painel de Administração</div>
+    <div class="fg"><label>Usuário</label><input type="text" id="lu" placeholder="admin" autocomplete="username"></div>
+    <div class="fg"><label>Senha</label><input type="password" id="lp" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="btn-login" id="btn-login" onclick="doLogin()">Entrar no Painel</button>
+    <div class="login-err" id="lerr">Usuário ou senha incorretos.</div>
     <div class="login-hint">Senha padrão: <code>admin123</code> — altere nas Configurações</div>
   </div>
 </div>
 
-<!-- ═══════ ADMIN ═══════ -->
 <div id="admin-screen">
-
-  <!-- SIDEBAR -->
   <div class="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-logo">IA<span>em30</span></div>
-      <div class="sidebar-role">Admin Dashboard</div>
+    <div class="sb-header">
+      <div class="sb-logo">IA<span>em30</span></div>
+      <div class="sb-role">Admin Dashboard</div>
+      <div class="sb-conn"><span class="sb-dot" id="sb-dot"></span><span id="sb-txt">Verificando...</span></div>
     </div>
-    <nav class="sidebar-nav">
-      <div class="nav-section-title">Visão Geral</div>
-      <div class="nav-item active" onclick="showPanel('dashboard')">
+    <nav class="sb-nav">
+      <div class="nav-sec">Visão Geral</div>
+      <div class="nav-item active" onclick="showPanel('dashboard',this)">
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg>
         Dashboard
       </div>
-
-      <div class="nav-section-title" style="margin-top:16px">Conteúdo</div>
-      <div class="nav-item" onclick="showPanel('general')">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M4 6h16M4 12h10M4 18h7"/></svg>
-        Geral & Textos
-      </div>
-      <div class="nav-item" onclick="showPanel('hero')">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M3 9l9-7 9 7v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg>
-        Hero & CTA
-      </div>
-      <div class="nav-item" onclick="showPanel('benefits')">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
-        Benefícios
-      </div>
-      <div class="nav-item" onclick="showPanel('weeks')">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M16 2v4M8 2v4M3 10h18"/></svg>
-        Semanas & Aprendizado
-      </div>
-      <div class="nav-item" onclick="showPanel('monetize')">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        Monetização
-      </div>
-      <div class="nav-item" onclick="showPanel('testimonials')">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Depoimentos
-      </div>
-      <div class="nav-item" onclick="showPanel('pricing')">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        Preço & Compra
-      </div>
-      <div class="nav-item" onclick="showPanel('faq')">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
-        FAQ
-      </div>
-      <div class="nav-item" onclick="showPanel('stats')">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><polyline stroke="currentColor" stroke-width="1.8" stroke-linecap="round" points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        Estatísticas
-      </div>
-
-      <div class="nav-section-title" style="margin-top:16px">Sistema</div>
-      <div class="nav-item" onclick="showPanel('settings')">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path stroke="currentColor" stroke-width="1.8" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        Configurações
-      </div>
+      <div class="nav-sec" style="margin-top:16px">Conteúdo</div>
+      <div class="nav-item" onclick="showPanel('general',this)"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M4 6h16M4 12h10M4 18h7"/></svg>Geral & Textos</div>
+      <div class="nav-item" onclick="showPanel('hero',this)"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M3 9l9-7 9 7v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg>Hero & CTA</div>
+      <div class="nav-item" onclick="showPanel('benefits',this)"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>Benefícios</div>
+      <div class="nav-item" onclick="showPanel('weeks',this)"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M16 2v4M8 2v4M3 10h18"/></svg>Semanas & Conteúdo</div>
+      <div class="nav-item" onclick="showPanel('monetize',this)"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Monetização</div>
+      <div class="nav-item" onclick="showPanel('testimonials',this)"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Depoimentos</div>
+      <div class="nav-item" onclick="showPanel('pricing',this)"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Preço & Compra</div>
+      <div class="nav-item" onclick="showPanel('faq',this)"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>FAQ</div>
+      <div class="nav-sec" style="margin-top:16px">Sistema</div>
+      <div class="nav-item" onclick="showPanel('settings',this)"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path stroke="currentColor" stroke-width="1.8" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Configurações</div>
     </nav>
-    <div class="sidebar-footer">
-      <a href="index.html" target="_blank" class="btn-view-site">
-        <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline stroke="currentColor" stroke-width="2" points="15 3 21 3 21 9"/><line stroke="currentColor" stroke-width="2" stroke-linecap="round" x1="10" y1="14" x2="21" y2="3"/></svg>
-        Ver Site
-      </a>
-      <button class="btn-logout" onclick="doLogout()">
-        <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-        Sair
-      </button>
+    <div class="sb-foot">
+      <a href="index.html" target="_blank" class="btn-site"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline stroke="currentColor" stroke-width="2" points="15 3 21 3 21 9"/><line stroke="currentColor" stroke-width="2" stroke-linecap="round" x1="10" y1="14" x2="21" y2="3"/></svg>Ver Site</a>
+      <button class="btn-out" onclick="doLogout()"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>Sair</button>
     </div>
   </div>
 
-  <!-- MAIN -->
-  <div class="main-content">
+  <div class="main">
     <div class="topbar">
-      <div class="topbar-title" id="panel-title">Dashboard</div>
+      <div class="topbar-title" id="ptitle">Dashboard</div>
       <div class="topbar-actions">
-        <span class="save-msg" id="save-msg">✓ Salvo com sucesso!</span>
         <button class="btn-reset" onclick="confirmReset()">Resetar Padrões</button>
         <button class="btn-save" id="btn-save" onclick="saveAll()">
           <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline stroke="currentColor" stroke-width="2" points="17 21 17 13 7 13 7 21"/><polyline stroke="currentColor" stroke-width="2" points="7 3 7 8 15 8"/></svg>
@@ -400,858 +157,439 @@
       </div>
     </div>
 
-    <!-- ── DASHBOARD ── -->
+    <!-- DASHBOARD -->
     <div class="panel active" id="panel-dashboard">
-      <div class="overview-grid">
-        <div class="stat-card"><div class="s-label">Produto</div><div class="s-value">R$19,90</div><div class="s-sub">Preço atual</div></div>
-        <div class="stat-card"><div class="s-label">Benefícios</div><div class="s-value" id="dash-benefits">6</div><div class="s-sub">Itens na lista</div></div>
-        <div class="stat-card"><div class="s-label">Depoimentos</div><div class="s-value" id="dash-testimonials">3</div><div class="s-sub">Visíveis no site</div></div>
-        <div class="stat-card"><div class="s-label">FAQs</div><div class="s-value" id="dash-faqs">4</div><div class="s-sub">Perguntas ativas</div></div>
+      <div class="og">
+        <div class="sc"><div class="sl">Preço atual</div><div class="sv" id="d-price">R$19,90</div><div class="ss">Produto</div></div>
+        <div class="sc"><div class="sl">Benefícios</div><div class="sv" id="d-ben">6</div><div class="ss">Cards ativos</div></div>
+        <div class="sc"><div class="sl">Depoimentos</div><div class="sv" id="d-test">3</div><div class="ss">Visíveis no site</div></div>
+        <div class="sc"><div class="sl">Último save</div><div class="sv" style="font-size:13px;padding-top:6px" id="d-save">—</div><div class="ss">Supabase</div></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
         <div class="card">
-          <div class="card-header"><h3>Link do Produto</h3><span class="tag green">Ativo</span></div>
-          <div class="card-body">
-            <div class="field">
-              <label>URL de Compra</label>
-              <input type="url" id="dash-product-link" placeholder="https://">
-              <span class="hint">O link para o qual todos os botões "Comprar" apontam</span>
-            </div>
-            <button class="btn-save" style="width:fit-content" onclick="saveProductLinkOnly()">Salvar Link</button>
+          <div class="card-h"><h3>Link do Produto</h3><span class="tag g">Principal</span></div>
+          <div class="card-b">
+            <div class="field"><label>URL de Compra</label><input type="url" id="d-link" placeholder="https://..."><span class="hint">Todos os botões CTA apontam para este link.</span></div>
+            <button class="btn-save" style="width:fit-content" onclick="saveLinkOnly()">Salvar Link Agora</button>
           </div>
         </div>
         <div class="card">
-          <div class="card-header"><h3>Acesso Rápido ao Site</h3></div>
-          <div class="card-body">
-            <div class="preview-frame">
-              <div style="font-size:24px;margin-bottom:8px">🌐</div>
-              <div style="margin-bottom:12px;font-size:13px">Veja como o site está em tempo real</div>
-              <a href="index.html" target="_blank" class="preview-link">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline stroke="currentColor" stroke-width="2" points="15 3 21 3 21 9"/><line stroke="currentColor" stroke-width="2" stroke-linecap="round" x1="10" y1="14" x2="21" y2="3"/></svg>
-                Abrir index.html
-              </a>
+          <div class="card-h"><h3>Visualizar Site</h3></div>
+          <div class="card-b">
+            <div class="pf">
+              <div style="font-size:28px;margin-bottom:10px">🌐</div>
+              <div style="font-size:13px;margin-bottom:14px">Alterações salvas no Supabase aparecem imediatamente no site em qualquer dispositivo.</div>
+              <a href="index.html" target="_blank" class="pl"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline stroke="currentColor" stroke-width="2" points="15 3 21 3 21 9"/><line stroke="currentColor" stroke-width="2" stroke-linecap="round" x1="10" y1="14" x2="21" y2="3"/></svg>Abrir index.html ↗</a>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ── GERAL ── -->
+    <!-- GERAL -->
     <div class="panel" id="panel-general">
-      <div class="panel-grid">
-        <div class="card">
-          <div class="card-header"><h3>Identidade do Site</h3></div>
-          <div class="card-body">
-            <div class="field-row">
-              <div class="field"><label>Nome da Marca</label><input type="text" id="f-footerBrand"></div>
-              <div class="field"><label>Link do Produto</label><input type="url" id="f-productLink"></div>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><h3>Estatísticas (Barra de Prova Social)</h3></div>
-          <div class="card-body">
-            <div class="field-row">
-              <div class="field"><label>Stat 1 — Número</label><input type="text" id="f-stat1Num"></div>
-              <div class="field"><label>Stat 1 — Label</label><input type="text" id="f-stat1Label"></div>
-            </div>
-            <div class="field-row">
-              <div class="field"><label>Stat 2 — Número</label><input type="text" id="f-stat2Num"></div>
-              <div class="field"><label>Stat 2 — Label</label><input type="text" id="f-stat2Label"></div>
-            </div>
-            <div class="field-row">
-              <div class="field"><label>Stat 3 — Número</label><input type="text" id="f-stat3Num"></div>
-              <div class="field"><label>Stat 3 — Label</label><input type="text" id="f-stat3Label"></div>
-            </div>
-            <div class="field-row">
-              <div class="field"><label>Stat 4 — Número</label><input type="text" id="f-stat4Num"></div>
-              <div class="field"><label>Stat 4 — Label</label><input type="text" id="f-stat4Label"></div>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><h3>Seção "Por que este ebook?"</h3></div>
-          <div class="card-body">
-            <div class="field"><label>Título</label><input type="text" id="f-whyTitle"></div>
-            <div class="field"><label>Subtítulo</label><textarea rows="2" id="f-whySubtitle"></textarea></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><h3>CTA Final & Rodapé</h3></div>
-          <div class="card-body">
-            <div class="field"><label>Título CTA Final</label><input type="text" id="f-ctaFinalTitle"></div>
-            <div class="field"><label>Texto CTA Final</label><textarea rows="2" id="f-ctaFinalDesc"></textarea></div>
-            <div class="field"><label>Texto do Botão CTA Final</label><input type="text" id="f-ctaFinalText"></div>
-          </div>
-        </div>
+      <div class="pg">
+        <div class="card"><div class="card-h"><h3>Identidade & Link</h3></div><div class="card-b"><div class="fr"><div class="field"><label>Nome da Marca</label><input type="text" id="f-footerBrand"></div><div class="field"><label>Link do Produto</label><input type="url" id="f-productLink"></div></div></div></div>
+        <div class="card"><div class="card-h"><h3>Barra de Prova Social</h3></div><div class="card-b">
+          <div class="fr"><div class="field"><label>Stat 1 — Número</label><input type="text" id="f-stat1Num"></div><div class="field"><label>Stat 1 — Label</label><input type="text" id="f-stat1Label"></div></div>
+          <div class="fr"><div class="field"><label>Stat 2 — Número</label><input type="text" id="f-stat2Num"></div><div class="field"><label>Stat 2 — Label</label><input type="text" id="f-stat2Label"></div></div>
+          <div class="fr"><div class="field"><label>Stat 3 — Número</label><input type="text" id="f-stat3Num"></div><div class="field"><label>Stat 3 — Label</label><input type="text" id="f-stat3Label"></div></div>
+          <div class="fr"><div class="field"><label>Stat 4 — Número</label><input type="text" id="f-stat4Num"></div><div class="field"><label>Stat 4 — Label</label><input type="text" id="f-stat4Label"></div></div>
+        </div></div>
+        <div class="card"><div class="card-h"><h3>Seção "Por que este ebook?"</h3></div><div class="card-b"><div class="field"><label>Título</label><input type="text" id="f-whyTitle"></div><div class="field"><label>Subtítulo</label><textarea rows="2" id="f-whySubtitle"></textarea></div></div></div>
+        <div class="card"><div class="card-h"><h3>CTA Final</h3></div><div class="card-b"><div class="field"><label>Título</label><input type="text" id="f-ctaFinalTitle"></div><div class="field"><label>Descrição</label><textarea rows="2" id="f-ctaFinalDesc"></textarea></div><div class="field"><label>Texto do Botão</label><input type="text" id="f-ctaFinalText"></div></div></div>
       </div>
     </div>
 
-    <!-- ── HERO ── -->
+    <!-- HERO -->
     <div class="panel" id="panel-hero">
-      <div class="panel-grid">
-        <div class="card">
-          <div class="card-header"><h3>Seção Hero (Topo)</h3></div>
-          <div class="card-body">
-            <div class="field"><label>Badge (faixa colorida)</label><input type="text" id="f-heroBadge"></div>
-            <div class="field">
-              <label>Título Principal (HTML aceito)</label>
-              <textarea rows="3" id="f-heroTitle"></textarea>
-              <span class="hint">Use &lt;span class="highlight"&gt;texto&lt;/span&gt; para destacar parte do título em roxo.</span>
-            </div>
-            <div class="field"><label>Subtítulo</label><textarea rows="3" id="f-heroSubtitle"></textarea></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><h3>Botões & Capa do Ebook</h3></div>
-          <div class="card-body">
-            <div class="field"><label>Link do Produto (URL)</label><input type="url" id="f-productLink2"></div>
-            <div class="field"><label>Texto do Botão Hero</label><input type="text" id="f-heroCtaText"></div>
-            <div class="field"><label>Texto do Botão CTA Header</label><input type="text" id="f-headerCtaText" placeholder="Quero o Ebook"></div>
-            <div class="field-row">
-              <div class="field"><label>Título no Livro</label><input type="text" id="f-bookTitle"></div>
-              <div class="field"><label>Subtítulo no Livro</label><input type="text" id="f-bookSub"></div>
-            </div>
-            <div class="field"><label>Badge de Preço no Livro</label><input type="text" id="f-bookPriceBadge"></div>
-          </div>
-        </div>
+      <div class="pg">
+        <div class="card"><div class="card-h"><h3>Seção Hero</h3></div><div class="card-b">
+          <div class="field"><label>Badge</label><input type="text" id="f-heroBadge"></div>
+          <div class="field"><label>Título Principal (HTML aceito)</label><textarea rows="3" id="f-heroTitle"></textarea><span class="hint">Use &lt;span class="highlight"&gt;texto&lt;/span&gt; para destacar em roxo.</span></div>
+          <div class="field"><label>Subtítulo</label><textarea rows="3" id="f-heroSubtitle"></textarea></div>
+        </div></div>
+        <div class="card"><div class="card-h"><h3>Botões & Capa do Ebook</h3></div><div class="card-b">
+          <div class="field"><label>Link do Produto</label><input type="url" id="f-productLink2"></div>
+          <div class="field"><label>Texto do Botão Principal</label><input type="text" id="f-heroCtaText"></div>
+          <div class="fr"><div class="field"><label>Título na Capa</label><input type="text" id="f-bookTitle"></div><div class="field"><label>Subtítulo na Capa</label><input type="text" id="f-bookSub"></div></div>
+          <div class="field"><label>Badge de Preço na Capa</label><input type="text" id="f-bookPriceBadge"></div>
+        </div></div>
       </div>
     </div>
 
-    <!-- ── BENEFITS ── -->
+    <!-- BENEFITS -->
     <div class="panel" id="panel-benefits">
-      <div class="card">
-        <div class="card-header"><h3>Cards de Benefícios</h3><span class="tag">6 cards</span></div>
-        <div class="card-body">
-          <div class="list-editor" id="benefits-editor"></div>
-          <button class="btn-add" onclick="addBenefit()">+ Adicionar Benefício</button>
-        </div>
-      </div>
+      <div class="card"><div class="card-h"><h3>Cards de Benefícios</h3></div><div class="card-b"><div class="le" id="benefits-editor"></div><button class="btn-add" onclick="addBenefit()">+ Adicionar Benefício</button></div></div>
     </div>
 
-    <!-- ── WEEKS ── -->
+    <!-- WEEKS -->
     <div class="panel" id="panel-weeks">
-      <div style="display:grid;gap:24px;">
-        <div class="card">
-          <div class="card-header"><h3>Seção "O que você vai aprender"</h3></div>
-          <div class="card-body">
-            <div class="field"><label>Título da Seção</label><input type="text" id="f-learnTitle"></div>
-            <div class="field"><label>Descrição</label><textarea rows="2" id="f-learnDesc"></textarea></div>
-            <div class="field">
-              <label>Lista de Aprendizados (um por linha)</label>
-              <textarea rows="8" id="f-learnItems"></textarea>
-              <span class="hint">Um item por linha. Cada linha vira um bullet ✓ na lista.</span>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><h3>Semanas do Plano de Ação</h3></div>
-          <div class="card-body">
-            <div class="list-editor" id="weeks-editor"></div>
-            <button class="btn-add" onclick="addWeek()">+ Adicionar Semana</button>
-          </div>
-        </div>
+      <div class="pg">
+        <div class="card"><div class="card-h"><h3>O que você vai aprender</h3></div><div class="card-b">
+          <div class="field"><label>Título</label><input type="text" id="f-learnTitle"></div>
+          <div class="field"><label>Descrição</label><textarea rows="2" id="f-learnDesc"></textarea></div>
+          <div class="field"><label>Lista (um item por linha)</label><textarea rows="8" id="f-learnItems"></textarea><span class="hint">Cada linha vira um bullet ✓ na lista.</span></div>
+        </div></div>
+        <div class="card"><div class="card-h"><h3>Semanas do Plano</h3></div><div class="card-b"><div class="le" id="weeks-editor"></div><button class="btn-add" onclick="addWeek()">+ Adicionar Semana</button></div></div>
       </div>
     </div>
 
-    <!-- ── MONETIZE ── -->
+    <!-- MONETIZE -->
     <div class="panel" id="panel-monetize">
-      <div class="card">
-        <div class="card-header"><h3>Formas de Monetização</h3></div>
-        <div class="card-body">
-          <div class="field-row" style="margin-bottom:4px;">
-            <div class="field"><label>Título da Seção</label><input type="text" id="f-monetizeTitle"></div>
-            <div class="field"><label>Descrição</label><input type="text" id="f-monetizeDesc"></div>
-          </div>
-          <div class="list-editor" id="monetize-editor"></div>
-          <button class="btn-add" onclick="addMonetize()">+ Adicionar Item</button>
-        </div>
-      </div>
+      <div class="card"><div class="card-h"><h3>Formas de Monetização</h3></div><div class="card-b">
+        <div class="fr"><div class="field"><label>Título da Seção</label><input type="text" id="f-monetizeTitle"></div><div class="field"><label>Descrição</label><input type="text" id="f-monetizeDesc"></div></div>
+        <div class="le" id="monetize-editor"></div>
+        <button class="btn-add" onclick="addMonetize()">+ Adicionar Item</button>
+      </div></div>
     </div>
 
-    <!-- ── TESTIMONIALS ── -->
+    <!-- TESTIMONIALS -->
     <div class="panel" id="panel-testimonials">
-      <div class="card">
-        <div class="card-header"><h3>Depoimentos de Clientes</h3></div>
-        <div class="card-body">
-          <div class="field" style="margin-bottom:4px;"><label>Título da Seção</label><input type="text" id="f-testimonialsTitle"></div>
-          <div class="list-editor" id="testimonials-editor"></div>
-          <button class="btn-add" onclick="addTestimonial()">+ Adicionar Depoimento</button>
-        </div>
-      </div>
+      <div class="card"><div class="card-h"><h3>Depoimentos</h3></div><div class="card-b">
+        <div class="field"><label>Título da Seção</label><input type="text" id="f-testimonialsTitle"></div>
+        <div class="le" id="testimonials-editor"></div>
+        <button class="btn-add" onclick="addTest()">+ Adicionar Depoimento</button>
+      </div></div>
     </div>
 
-    <!-- ── PRICING ── -->
+    <!-- PRICING -->
     <div class="panel" id="panel-pricing">
-      <div class="panel-grid">
-        <div class="card">
-          <div class="card-header"><h3>Preço & Link de Compra</h3></div>
-          <div class="card-body">
-            <div class="field"><label>Link do Produto (URL)</label><input type="url" id="f-productLink3" placeholder="https://"></div>
-            <div class="field-row">
-              <div class="field"><label>Preço Antigo</label><input type="text" id="f-priceOld" placeholder="R$47"></div>
-              <div class="field"><label>Preço Principal</label><input type="text" id="f-priceMain" placeholder="19"></div>
-            </div>
-            <div class="field-row">
-              <div class="field"><label>Centavos</label><input type="text" id="f-priceCents" placeholder=",90"></div>
-              <div class="field"><label>Texto do Botão de Compra</label><input type="text" id="f-pricingCtaText"></div>
-            </div>
-            <div class="field"><label>Texto da Garantia</label><textarea rows="3" id="f-guaranteeText"></textarea></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><h3>Lista de Inclusos no Preço</h3></div>
-          <div class="card-body">
-            <div class="field">
-              <label>Itens (um por linha)</label>
-              <textarea rows="10" id="f-pricingFeatures"></textarea>
-              <span class="hint">Cada linha vira um item ✓ na lista de inclusos.</span>
-            </div>
-          </div>
-        </div>
+      <div class="pg">
+        <div class="card"><div class="card-h"><h3>Preço & Link</h3></div><div class="card-b">
+          <div class="field"><label>Link do Produto</label><input type="url" id="f-productLink3"></div>
+          <div class="fr"><div class="field"><label>Preço Antigo (riscado)</label><input type="text" id="f-priceOld"></div><div class="field"><label>Preço Principal</label><input type="text" id="f-priceMain"></div></div>
+          <div class="fr"><div class="field"><label>Centavos</label><input type="text" id="f-priceCents"></div><div class="field"><label>Texto do Botão CTA</label><input type="text" id="f-pricingCtaText"></div></div>
+          <div class="field"><label>Texto da Garantia</label><textarea rows="3" id="f-guaranteeText"></textarea></div>
+        </div></div>
+        <div class="card"><div class="card-h"><h3>Lista de Inclusos</h3></div><div class="card-b"><div class="field"><label>Itens (um por linha)</label><textarea rows="10" id="f-pricingFeatures"></textarea><span class="hint">Cada linha vira um item ✓.</span></div></div></div>
       </div>
     </div>
 
-    <!-- ── FAQ ── -->
+    <!-- FAQ -->
     <div class="panel" id="panel-faq">
-      <div class="card">
-        <div class="card-header"><h3>Perguntas Frequentes</h3></div>
-        <div class="card-body">
-          <div class="list-editor" id="faq-editor"></div>
-          <button class="btn-add" onclick="addFaq()">+ Adicionar Pergunta</button>
-        </div>
-      </div>
+      <div class="card"><div class="card-h"><h3>Perguntas Frequentes</h3></div><div class="card-b"><div class="le" id="faq-editor"></div><button class="btn-add" onclick="addFaq()">+ Adicionar Pergunta</button></div></div>
     </div>
 
-    <!-- ── STATS ── -->
-    <div class="panel" id="panel-stats">
-      <div class="card">
-        <div class="card-header"><h3>Informações do Site</h3></div>
-        <div class="card-body">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-            <div>
-              <div style="font-size:12px;color:var(--muted2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Configurações salvas</div>
-              <div style="font-size:22px;font-family:'Syne',sans-serif;font-weight:800;" id="stats-saved">—</div>
-            </div>
-            <div>
-              <div style="font-size:12px;color:var(--muted2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Último salvamento</div>
-              <div style="font-size:22px;font-family:'Syne',sans-serif;font-weight:800;" id="stats-lastsave">—</div>
-            </div>
-          </div>
-          <hr style="border-color:var(--border);margin:8px 0;">
-          <div style="font-size:13px;color:var(--muted);">
-            As configurações são salvas no <strong>localStorage</strong> do navegador e lidas pelo <code>index.html</code> automaticamente. Para fazer backup, use o botão abaixo.
-          </div>
-          <div style="display:flex;gap:12px;flex-wrap:wrap;">
-            <button class="btn-save" style="width:fit-content" onclick="exportConfig()">📥 Exportar Config (JSON)</button>
-            <button class="btn-reset" onclick="importConfig()">📤 Importar Config</button>
-            <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── SETTINGS ── -->
+    <!-- SETTINGS -->
     <div class="panel" id="panel-settings">
-      <div class="panel-grid" style="max-width:520px;">
-        <div class="card">
-          <div class="card-header"><h3>Alterar Senha de Acesso</h3></div>
-          <div class="card-body">
-            <div class="field"><label>Senha Atual</label><input type="password" id="s-old-pw" placeholder="Digite a senha atual"></div>
-            <div class="field"><label>Nova Senha</label><input type="password" id="s-new-pw" placeholder="Mínimo 6 caracteres"></div>
-            <div class="field"><label>Confirmar Nova Senha</label><input type="password" id="s-confirm-pw" placeholder="Repita a nova senha"></div>
-            <button class="btn-save" style="width:fit-content" onclick="changePassword()">Alterar Senha</button>
+      <div class="pg" style="max-width:520px">
+        <div class="card"><div class="card-h"><h3>Alterar Senha</h3></div><div class="card-b">
+          <div class="field"><label>Senha Atual</label><input type="password" id="s-old"></div>
+          <div class="field"><label>Nova Senha</label><input type="password" id="s-new" placeholder="Mínimo 6 caracteres"></div>
+          <div class="field"><label>Confirmar</label><input type="password" id="s-cf"></div>
+          <button class="btn-save" style="width:fit-content" onclick="changePw()">Alterar Senha</button>
+        </div></div>
+        <div class="card"><div class="card-h"><h3>Backup</h3></div><div class="card-b">
+          <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:8px">Configs salvas no Supabase sincronizam em qualquer dispositivo. Use o backup como cópia local de segurança.</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button class="btn-save" style="width:fit-content" onclick="exportCfg()">📥 Exportar JSON</button>
+            <button class="btn-reset" onclick="document.getElementById('imp').click()">📤 Importar JSON</button>
+            <input type="file" id="imp" accept=".json" style="display:none" onchange="importCfg(event)">
           </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><h3>Sobre o Sistema</h3></div>
-          <div class="card-body">
-            <div style="font-size:13px;color:var(--muted);line-height:1.7;">
-              <strong style="color:var(--text);">IA em 30 — Admin v1.0</strong><br>
-              Sistema estático. Todas as configurações são salvas no localStorage do seu navegador.<br><br>
-              <strong style="color:var(--text);">Hospedagem:</strong> GitHub Pages<br>
-              <strong style="color:var(--text);">Para publicar:</strong> Salve as alterações, abra o <code>index.html</code> no mesmo computador e ele lerá as configs. Para outros dispositivos, use o Exportar/Importar Config.
-            </div>
-          </div>
-        </div>
+        </div></div>
       </div>
     </div>
-
-  </div><!-- /main-content -->
-</div><!-- /admin-screen -->
-
-<!-- TOAST -->
-<div id="toast">
-  <span id="toast-icon">✓</span>
-  <span id="toast-msg">Salvo com sucesso!</span>
+  </div>
 </div>
 
-<script>
-// ═════════════════════════════════════════════════
-// AUTH
-// ═════════════════════════════════════════════════
-const DEFAULT_PW = 'admin123';
+<div id="toast"><span id="ti">✓</span> <span id="tm"></span></div>
 
-function getStoredPw() {
-  return localStorage.getItem('iaem30_admin_pw') || DEFAULT_PW;
+<script>
+const SB = 'https://ihylwxjxjajtdhsnlrfm.supabase.co';
+const AK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloeWx3eGp4amFqdGRoc25scmZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MDQyNjYsImV4cCI6MjA4OTA4MDI2Nn0.CVVtGeSrg47hSm_WKX-EaQhzaUilrLXhKZnKdJkzepY';
+const H  = {apikey:AK,Authorization:'Bearer '+AK,'Content-Type':'application/json'};
+
+async function sbLoad() {
+  try {
+    const r = await fetch(`${SB}/rest/v1/iaem30_config?id=eq.1&select=config,updated_at`,{headers:H});
+    if(!r.ok) return null;
+    return (await r.json())?.[0] ?? null;
+  } catch(e){return null;}
 }
 
-function doLogin() {
-  const user = document.getElementById('login-user').value.trim();
-  const pass = document.getElementById('login-pass').value;
-  const err = document.getElementById('login-error');
-  if(user === 'admin' && pass === getStoredPw()) {
-    sessionStorage.setItem('iaem30_logged', '1');
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-screen').style.display = 'flex';
-    loadAllFields();
+async function sbSave(cfg) {
+  try {
+    const r = await fetch(`${SB}/rest/v1/iaem30_config?id=eq.1`,{
+      method:'PATCH', headers:{...H,Prefer:'return=minimal'},
+      body:JSON.stringify({config:cfg,updated_at:new Date().toISOString()})
+    });
+    return r.ok;
+  } catch(e){return false;}
+}
+
+// AUTH
+const DEFAULT_PW='admin123';
+const getPw=()=>localStorage.getItem('iaem30_pw')||DEFAULT_PW;
+
+async function doLogin() {
+  const u=document.getElementById('lu').value.trim();
+  const p=document.getElementById('lp').value;
+  const btn=document.getElementById('btn-login');
+  if(u==='admin'&&p===getPw()){
+    btn.disabled=true; btn.textContent='Carregando…';
+    sessionStorage.setItem('ia_ok','1');
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-screen').style.display='flex';
+    await init();
   } else {
-    err.style.display = 'block';
-    setTimeout(() => err.style.display = 'none', 3000);
+    const e=document.getElementById('lerr'); e.style.display='block';
+    setTimeout(()=>e.style.display='none',3000);
   }
 }
-
-function doLogout() {
-  sessionStorage.removeItem('iaem30_logged');
-  location.reload();
+function doLogout(){sessionStorage.removeItem('ia_ok');location.reload();}
+function changePw(){
+  const o=document.getElementById('s-old').value;
+  const n=document.getElementById('s-new').value;
+  const c=document.getElementById('s-cf').value;
+  if(o!==getPw()){toast('Senha atual incorreta','error');return;}
+  if(n.length<6){toast('Mínimo 6 caracteres','error');return;}
+  if(n!==c){toast('Senhas não coincidem','error');return;}
+  localStorage.setItem('iaem30_pw',n);
+  toast('Senha alterada!');
+  ['s-old','s-new','s-cf'].forEach(id=>document.getElementById(id).value='');
 }
-
-function changePassword() {
-  const old = document.getElementById('s-old-pw').value;
-  const nw = document.getElementById('s-new-pw').value;
-  const cf = document.getElementById('s-confirm-pw').value;
-  if(old !== getStoredPw()) { toast('Senha atual incorreta', 'error'); return; }
-  if(nw.length < 6) { toast('Nova senha deve ter pelo menos 6 caracteres', 'error'); return; }
-  if(nw !== cf) { toast('As senhas não coincidem', 'error'); return; }
-  localStorage.setItem('iaem30_admin_pw', nw);
-  toast('Senha alterada com sucesso!');
-  document.getElementById('s-old-pw').value = '';
-  document.getElementById('s-new-pw').value = '';
-  document.getElementById('s-confirm-pw').value = '';
-}
-
-// Check session on load
-window.addEventListener('load', () => {
-  if(sessionStorage.getItem('iaem30_logged') === '1') {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-screen').style.display = 'flex';
-    loadAllFields();
+window.addEventListener('load',()=>{
+  if(sessionStorage.getItem('ia_ok')==='1'){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-screen').style.display='flex';
+    init();
   }
 });
 
-// ═════════════════════════════════════════════════
-// CONFIG (same defaults as index.html)
-// ═════════════════════════════════════════════════
-const DEFAULTS = {
-  productLink: 'https://go.perfectpay.com.br/PPU38CQ4TBC',
-  heroTitle: 'Como Ganhar Dinheiro com <span class="highlight">IA em 30 Dias</span>',
-  heroSubtitle: 'O ebook completo para músicos, ilustradores, designers e escritores que querem monetizar usando IA de forma ética e estratégica.',
-  heroBadge: '🔥 Mais de 1.200 criadores já transformaram',
-  heroCtaText: 'Quero Meu Ebook por R$19,90',
-  headerCtaText: 'Quero o Ebook',
-  bookTitle: 'Como Ganhar Dinheiro com IA em 30 Dias',
-  bookSub: 'Guia Prático para Criadores Independentes',
-  bookPriceBadge: 'R$19,90',
-  stat1Num: '1.200+', stat1Label: 'criadores impactados',
-  stat2Num: '⭐ 4.9', stat2Label: 'avaliação média',
-  stat3Num: '7 dias', stat3Label: 'de garantia total',
-  stat4Num: '30 dias', stat4Label: 'para transformação',
-  whyTitle: 'IA: Sua Aliada Criativa',
-  whySubtitle: 'A Inteligência Artificial está mudando o jogo. Artistas ao redor do mundo já estão usando IA para criar mais rápido, vender melhor e alcançar públicos maiores.',
-  learnTitle: 'O que você vai aprender',
-  learnDesc: 'Um método estruturado semana a semana para você sair do zero à sua primeira renda com IA.',
-  monetizeTitle: 'Transforme Sua Criação em Renda Real',
-  monetizeDesc: 'Descubra 5 caminhos comprovados para monetizar seu talento criativo usando IA.',
-  testimonialsTitle: 'O que dizem nossos leitores',
-  priceOld: 'R$47',
-  priceMain: '19',
-  priceCents: ',90',
-  pricingCtaText: 'Quero Meu Ebook Agora →',
-  guaranteeText: 'Garantia de 7 dias. Se não ficar satisfeito, devolvemos 100% do seu dinheiro — sem perguntas.',
-  ctaFinalTitle: 'Sua Decisão, Seu Futuro',
-  ctaFinalDesc: 'Ser criador independente hoje não é apenas criar — é empreender a própria arte. A IA amplifica sua voz.',
-  ctaFinalText: 'Começar Minha Transformação →',
-  footerBrand: 'IA em 30',
-  benefits: [
-    { icon: '🧠', title: 'Remove Bloqueios Criativos', desc: 'Supere o bloqueio com ideias instantâneas e variações ilimitadas para sua criação.' },
-    { icon: '⚡', title: 'Acelera Seus Processos', desc: 'Produza em horas o que levaria dias ou semanas manualmente. Mais tempo para criar.' },
-    { icon: '💰', title: 'Reduz Seus Custos', desc: 'Elimine gastos com ferramentas caras e terceirização. IA democratiza a produção.' },
-    { icon: '🎨', title: 'Profissionaliza Sua Marca', desc: 'Crie uma identidade visual forte e consistente para sua marca criativa.' },
-    { icon: '🛠️', title: 'Ferramentas para Cada Criação', desc: 'Midjourney, ChatGPT, Soundraw, CapCut IA — tudo explicado passo a passo.' },
-    { icon: '🤝', title: 'IA Como Aliada', desc: 'Você continua sendo o criador. A IA é sua assistente que amplifica sua visão única.' },
-  ],
-  learnItems: [
-    '5 formas reais de monetizar sua criação',
-    'Ferramentas de IA passo a passo (ChatGPT, Midjourney, Soundraw)',
-    'Plano de ação de 30 dias completo',
-    'Como posicionar e vender produtos digitais',
-    'Estratégias de conteúdo para crescer nas redes',
-    'Ética e direitos autorais no uso de IA',
-  ],
-  weeks: [
-    { num: '01', title: 'Base Criativa', desc: 'Defina identidade, escolha nicho e configure ferramentas.' },
-    { num: '02', title: 'Produto Digital', desc: 'Desenvolva seu produto principal e construa identidade visual.' },
-    { num: '03', title: 'Visibilidade', desc: 'Produza conteúdo promocional e feche suas primeiras vendas.' },
-    { num: '04', title: 'Escala Real', desc: 'Melhore qualidade, crie pacotes premium e automatize.' },
-  ],
-  monetizeItems: [
-    { num: '01', title: 'Venda da Própria Criação', desc: 'Música autoral, ilustrações digitais, fotografias e NFTs.' },
-    { num: '02', title: 'Serviços Personalizados', desc: 'Capas de álbum, artes para redes sociais e trilhas.' },
-    { num: '03', title: 'Produtos Digitais', desc: 'Ebooks artísticos, packs de artes e prompts criativos.' },
-    { num: '04', title: 'Conteúdo Monetizado', desc: 'YouTube, TikTok, Reels e plataformas como Patreon.' },
-    { num: '05', title: 'Ensino e Consultoria', desc: 'Cursos sobre seu processo e mentorias para criadores.' },
-    { num: '06', title: 'Pacotes Premium', desc: 'Serviços completos com entrega profissional e recorrente.' },
-  ],
-  testimonials: [
-    { stars: 5, text: '"Comecei do zero e em 3 semanas já estava vendendo artes digitais no Instagram. O método é claro e direto ao ponto!"', name: 'Ana Silva', role: 'Ilustradora Digital', avatar: '🎨' },
-    { stars: 5, text: '"Como músico, achei que IA ia competir comigo. Mas esse ebook mostrou como usar como ferramenta. Já ganhei R$1.800 num mês!"', name: 'Carlos M.', role: 'Produtor Musical', avatar: '🎵' },
-    { stars: 5, text: '"Investimento que se pagou em 3 dias. A parte de monetização com conteúdo foi um divisor de águas para minha carreira."', name: 'Juliana R.', role: 'Designer Gráfica', avatar: '✨' },
-  ],
-  pricingFeatures: [
-    'Ebook completo em PDF (180+ páginas)',
-    '5 formas reais de monetizar sua criação',
-    'Ferramentas de IA passo a passo',
-    'Plano de ação de 30 dias completo',
-    'Dicas de ética e direitos autorais',
-    'Download imediato + Acesso vitalício',
-  ],
-  faqs: [
-    { q: 'Preciso ter conhecimento prévio em IA?', a: 'Não! O ebook foi feito do zero ao avançado, com tutoriais passo a passo fáceis de seguir.' },
-    { q: 'Funciona para qualquer tipo de artista?', a: 'Sim! Abordamos ferramentas específicas para músicos, ilustradores, designers, escritores, fotógrafos e videomakers.' },
-    { q: 'Usar IA não vai tirar minha autenticidade?', a: 'Pelo contrário. IA é uma ferramenta para acelerar sua produção técnica, permitindo que você foque mais na sua essência criativa.' },
-    { q: 'Quanto tempo leva para ter resultados?', a: 'O plano é estruturado para 30 dias. Muitos leitores relatam resultados nas primeiras 2 semanas de aplicação.' },
-  ]
+// DEFAULTS
+const DEF={
+  productLink:'https://go.perfectpay.com.br/PPU38CQ4TBC',
+  heroTitle:'Como Ganhar Dinheiro com <span class="highlight">IA em 30 Dias</span>',
+  heroSubtitle:'O ebook completo para músicos, ilustradores, designers e escritores que querem monetizar usando IA de forma ética e estratégica.',
+  heroBadge:'🔥 Mais de 1.200 criadores já transformaram',
+  heroCtaText:'Quero Meu Ebook por R$19,90',
+  bookTitle:'Como Ganhar Dinheiro com IA em 30 Dias',bookSub:'Guia Prático para Criadores Independentes',bookPriceBadge:'R$19,90',
+  stat1Num:'1.200+',stat1Label:'criadores impactados',stat2Num:'⭐ 4.9',stat2Label:'avaliação média',
+  stat3Num:'7 dias',stat3Label:'de garantia total',stat4Num:'30 dias',stat4Label:'para transformação',
+  whyTitle:'IA: Sua Aliada Criativa',whySubtitle:'A Inteligência Artificial está mudando o jogo.',
+  learnTitle:'O que você vai aprender',learnDesc:'Um método estruturado semana a semana para você sair do zero à sua primeira renda com IA.',
+  monetizeTitle:'Transforme Sua Criação em Renda Real',monetizeDesc:'Descubra 5 caminhos comprovados.',
+  testimonialsTitle:'O que dizem nossos leitores',
+  priceOld:'R$47',priceMain:'19',priceCents:',90',
+  pricingCtaText:'Quero Meu Ebook Agora →',
+  guaranteeText:'Garantia de 7 dias. Se não ficar satisfeito, devolvemos 100% do seu dinheiro — sem perguntas.',
+  ctaFinalTitle:'Sua Decisão, Seu Futuro',ctaFinalDesc:'Ser criador independente hoje não é apenas criar — é empreender a própria arte.',ctaFinalText:'Começar Minha Transformação →',
+  footerBrand:'IA em 30',
+  benefits:[{icon:'🧠',title:'Remove Bloqueios Criativos',desc:'Supere o bloqueio com ideias instantâneas.'},{icon:'⚡',title:'Acelera Seus Processos',desc:'Produza em horas o que levaria dias.'},{icon:'💰',title:'Reduz Seus Custos',desc:'Elimine gastos com ferramentas caras.'},{icon:'🎨',title:'Profissionaliza Sua Marca',desc:'Identidade visual forte e consistente.'},{icon:'🛠️',title:'Ferramentas para Cada Criação',desc:'Midjourney, ChatGPT, Soundraw e mais.'},{icon:'🤝',title:'IA Como Aliada',desc:'Você é o criador. A IA amplifica sua visão.'}],
+  learnItems:['5 formas reais de monetizar sua criação','Ferramentas de IA passo a passo (ChatGPT, Midjourney, Soundraw)','Plano de ação de 30 dias completo','Como posicionar e vender produtos digitais','Estratégias de conteúdo para crescer nas redes','Ética e direitos autorais no uso de IA'],
+  weeks:[{num:'01',title:'Base Criativa',desc:'Defina identidade, escolha nicho e configure ferramentas.'},{num:'02',title:'Produto Digital',desc:'Desenvolva seu produto principal e construa identidade visual.'},{num:'03',title:'Visibilidade',desc:'Produza conteúdo promocional e feche suas primeiras vendas.'},{num:'04',title:'Escala Real',desc:'Melhore qualidade, crie pacotes premium e automatize.'}],
+  monetizeItems:[{num:'01',title:'Venda da Própria Criação',desc:'Música autoral, ilustrações digitais, fotografias.'},{num:'02',title:'Serviços Personalizados',desc:'Capas de álbum, artes para redes sociais.'},{num:'03',title:'Produtos Digitais',desc:'Ebooks artísticos, packs de artes e prompts.'},{num:'04',title:'Conteúdo Monetizado',desc:'YouTube, TikTok, Reels e Patreon.'},{num:'05',title:'Ensino e Consultoria',desc:'Cursos e mentorias para criadores.'},{num:'06',title:'Pacotes Premium',desc:'Serviços completos e recorrentes.'}],
+  testimonials:[{stars:5,text:'"Comecei do zero e em 3 semanas já estava vendendo artes digitais no Instagram!"',name:'Ana Silva',role:'Ilustradora Digital',avatar:'🎨'},{stars:5,text:'"Já ganhei R$1.800 num mês usando as técnicas do ebook!"',name:'Carlos M.',role:'Produtor Musical',avatar:'🎵'},{stars:5,text:'"Investimento que se pagou em 3 dias."',name:'Juliana R.',role:'Designer Gráfica',avatar:'✨'}],
+  pricingFeatures:['Ebook completo em PDF (180+ páginas)','5 formas reais de monetizar sua criação','Ferramentas de IA passo a passo','Plano de ação de 30 dias completo','Dicas de ética e direitos autorais','Download imediato + Acesso vitalício'],
+  faqs:[{q:'Preciso ter conhecimento prévio em IA?',a:'Não! O ebook foi feito do zero ao avançado.'},{q:'Funciona para qualquer tipo de artista?',a:'Sim! Abordamos ferramentas para músicos, ilustradores, designers e muito mais.'},{q:'Usar IA não vai tirar minha autenticidade?',a:'Pelo contrário. IA é uma ferramenta, não um substituto à sua criatividade.'},{q:'Quanto tempo para ter resultados?',a:'Muitos leitores relatam resultados nas primeiras 2 semanas.'}]
 };
 
-function getCfg() {
-  try {
-    const s = localStorage.getItem('iaem30_config');
-    return s ? { ...DEFAULTS, ...JSON.parse(s) } : { ...DEFAULTS };
-  } catch(e) { return { ...DEFAULTS }; }
+let C={...DEF};
+
+async function init(){
+  const row=await sbLoad();
+  const dot=document.getElementById('sb-dot');
+  const txt=document.getElementById('sb-txt');
+  if(row!==null){
+    dot.classList.add('ok'); txt.textContent='Supabase conectado';
+    if(row.config&&Object.keys(row.config).length>0) C={...DEF,...row.config};
+    if(row.updated_at){
+      const d=new Date(row.updated_at);
+      document.getElementById('d-save').textContent=d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    }
+  } else {
+    txt.textContent='Offline — usando local';
+    try{const l=localStorage.getItem('iaem30_config');if(l)C={...DEF,...JSON.parse(l)};}catch(e){}
+  }
+  fill();
 }
 
-function saveCfg(cfg) {
-  localStorage.setItem('iaem30_config', JSON.stringify(cfg));
-  localStorage.setItem('iaem30_last_save', new Date().toLocaleString('pt-BR'));
+const PTITLES={dashboard:'Dashboard',general:'Geral & Textos',hero:'Hero & CTA',benefits:'Benefícios',weeks:'Semanas & Conteúdo',monetize:'Monetização',testimonials:'Depoimentos',pricing:'Preço & Compra',faq:'FAQ',settings:'Configurações'};
+function showPanel(id,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('ptitle').textContent=PTITLES[id]||id;
 }
 
-// ═════════════════════════════════════════════════
-// NAVIGATION
-// ═════════════════════════════════════════════════
-const panelTitles = {
-  dashboard:'Dashboard', general:'Geral & Textos', hero:'Hero & CTA',
-  benefits:'Benefícios', weeks:'Semanas & Aprendizado', monetize:'Monetização',
-  testimonials:'Depoimentos', pricing:'Preço & Compra', faq:'FAQ',
-  stats:'Estatísticas', settings:'Configurações'
-};
-
-function showPanel(id) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('panel-' + id).classList.add('active');
-  event.currentTarget.classList.add('active');
-  document.getElementById('panel-title').textContent = panelTitles[id] || id;
-}
-
-// ═════════════════════════════════════════════════
-// LOAD FIELDS
-// ═════════════════════════════════════════════════
-function loadAllFields() {
-  const cfg = getCfg();
-
-  // Simple fields
-  const simple = {
-    'f-footerBrand': 'footerBrand', 'f-productLink': 'productLink',
-    'f-productLink2': 'productLink', 'f-productLink3': 'productLink',
-    'f-stat1Num': 'stat1Num', 'f-stat1Label': 'stat1Label',
-    'f-stat2Num': 'stat2Num', 'f-stat2Label': 'stat2Label',
-    'f-stat3Num': 'stat3Num', 'f-stat3Label': 'stat3Label',
-    'f-stat4Num': 'stat4Num', 'f-stat4Label': 'stat4Label',
-    'f-whyTitle': 'whyTitle', 'f-whySubtitle': 'whySubtitle',
-    'f-heroBadge': 'heroBadge', 'f-heroTitle': 'heroTitle',
-    'f-heroSubtitle': 'heroSubtitle', 'f-heroCtaText': 'heroCtaText',
-    'f-headerCtaText': 'headerCtaText',
-    'f-bookTitle': 'bookTitle', 'f-bookSub': 'bookSub',
-    'f-bookPriceBadge': 'bookPriceBadge',
-    'f-learnTitle': 'learnTitle', 'f-learnDesc': 'learnDesc',
-    'f-monetizeTitle': 'monetizeTitle', 'f-monetizeDesc': 'monetizeDesc',
-    'f-testimonialsTitle': 'testimonialsTitle',
-    'f-priceOld': 'priceOld', 'f-priceMain': 'priceMain', 'f-priceCents': 'priceCents',
-    'f-pricingCtaText': 'pricingCtaText', 'f-guaranteeText': 'guaranteeText',
-    'f-ctaFinalTitle': 'ctaFinalTitle', 'f-ctaFinalDesc': 'ctaFinalDesc',
-    'f-ctaFinalText': 'ctaFinalText',
+function fill(){
+  const map={
+    'f-footerBrand':'footerBrand','f-productLink':'productLink','f-productLink2':'productLink','f-productLink3':'productLink',
+    'f-stat1Num':'stat1Num','f-stat1Label':'stat1Label','f-stat2Num':'stat2Num','f-stat2Label':'stat2Label',
+    'f-stat3Num':'stat3Num','f-stat3Label':'stat3Label','f-stat4Num':'stat4Num','f-stat4Label':'stat4Label',
+    'f-whyTitle':'whyTitle','f-whySubtitle':'whySubtitle',
+    'f-heroBadge':'heroBadge','f-heroTitle':'heroTitle','f-heroSubtitle':'heroSubtitle','f-heroCtaText':'heroCtaText',
+    'f-bookTitle':'bookTitle','f-bookSub':'bookSub','f-bookPriceBadge':'bookPriceBadge',
+    'f-learnTitle':'learnTitle','f-learnDesc':'learnDesc',
+    'f-monetizeTitle':'monetizeTitle','f-monetizeDesc':'monetizeDesc',
+    'f-testimonialsTitle':'testimonialsTitle',
+    'f-priceOld':'priceOld','f-priceMain':'priceMain','f-priceCents':'priceCents',
+    'f-pricingCtaText':'pricingCtaText','f-guaranteeText':'guaranteeText',
+    'f-ctaFinalTitle':'ctaFinalTitle','f-ctaFinalDesc':'ctaFinalDesc','f-ctaFinalText':'ctaFinalText',
   };
-  for(const [id, key] of Object.entries(simple)) {
-    const el = document.getElementById(id);
-    if(el && cfg[key] !== undefined) el.value = cfg[key];
-  }
-
-  // Dashboard link
-  const dl = document.getElementById('dash-product-link');
-  if(dl) dl.value = cfg.productLink || '';
-
-  // Array fields as textarea (one per line)
-  const li = document.getElementById('f-learnItems');
-  if(li) li.value = (cfg.learnItems || []).join('\n');
-  const pf = document.getElementById('f-pricingFeatures');
-  if(pf) pf.value = (cfg.pricingFeatures || []).join('\n');
-
-  // List editors
-  renderBenefits(cfg.benefits || []);
-  renderWeeks(cfg.weeks || []);
-  renderMonetize(cfg.monetizeItems || []);
-  renderTestimonials(cfg.testimonials || []);
-  renderFaqs(cfg.faqs || []);
-
-  // Stats panel
-  const ss = document.getElementById('stats-saved');
-  const sl = document.getElementById('stats-lastsave');
-  if(ss) ss.textContent = localStorage.getItem('iaem30_config') ? 'Sim' : 'Não';
-  if(sl) sl.textContent = localStorage.getItem('iaem30_last_save') || '—';
-
-  // Dashboard counts
-  updateDashCounts(cfg);
+  for(const[id,k]of Object.entries(map)){const el=document.getElementById(id);if(el&&C[k]!=null)el.value=C[k];}
+  const dl=document.getElementById('d-link'); if(dl)dl.value=C.productLink||'';
+  const li=document.getElementById('f-learnItems'); if(li)li.value=(C.learnItems||[]).join('\n');
+  const pf=document.getElementById('f-pricingFeatures'); if(pf)pf.value=(C.pricingFeatures||[]).join('\n');
+  rBen(C.benefits||[]); rWeeks(C.weeks||[]); rMon(C.monetizeItems||[]); rTest(C.testimonials||[]); rFaq(C.faqs||[]);
+  updDash();
 }
 
-function updateDashCounts(cfg) {
-  const b = document.getElementById('dash-benefits');
-  const t = document.getElementById('dash-testimonials');
-  const f = document.getElementById('dash-faqs');
-  if(b) b.textContent = (cfg.benefits || []).length;
-  if(t) t.textContent = (cfg.testimonials || []).length;
-  if(f) f.textContent = (cfg.faqs || []).length;
+function updDash(){
+  const b=document.getElementById('d-ben'),t=document.getElementById('d-test'),p=document.getElementById('d-price');
+  if(b)b.textContent=(C.benefits||[]).length;
+  if(t)t.textContent=(C.testimonials||[]).length;
+  if(p)p.textContent='R$'+(C.priceMain||'19')+(C.priceCents||',90');
 }
 
-// ═════════════════════════════════════════════════
-// COLLECT & SAVE
-// ═════════════════════════════════════════════════
-function collectAll() {
-  const cfg = getCfg();
-
-  function val(id) {
-    const el = document.getElementById(id);
-    return el ? el.value : undefined;
-  }
-
-  // Merge product link from all sources (prefer the most recently focused)
-  const plink = val('f-productLink3') || val('f-productLink2') || val('f-productLink') || cfg.productLink;
-
-  return {
-    ...cfg,
-    productLink: plink,
-    footerBrand: val('f-footerBrand') || cfg.footerBrand,
-    stat1Num: val('f-stat1Num'), stat1Label: val('f-stat1Label'),
-    stat2Num: val('f-stat2Num'), stat2Label: val('f-stat2Label'),
-    stat3Num: val('f-stat3Num'), stat3Label: val('f-stat3Label'),
-    stat4Num: val('f-stat4Num'), stat4Label: val('f-stat4Label'),
-    whyTitle: val('f-whyTitle'), whySubtitle: val('f-whySubtitle'),
-    heroBadge: val('f-heroBadge'), heroTitle: val('f-heroTitle'),
-    heroSubtitle: val('f-heroSubtitle'), heroCtaText: val('f-heroCtaText'),
-    headerCtaText: val('f-headerCtaText'),
-    bookTitle: val('f-bookTitle'), bookSub: val('f-bookSub'),
-    bookPriceBadge: val('f-bookPriceBadge'),
-    learnTitle: val('f-learnTitle'), learnDesc: val('f-learnDesc'),
-    monetizeTitle: val('f-monetizeTitle'), monetizeDesc: val('f-monetizeDesc'),
-    testimonialsTitle: val('f-testimonialsTitle'),
-    priceOld: val('f-priceOld'), priceMain: val('f-priceMain'), priceCents: val('f-priceCents'),
-    pricingCtaText: val('f-pricingCtaText'), guaranteeText: val('f-guaranteeText'),
-    ctaFinalTitle: val('f-ctaFinalTitle'), ctaFinalDesc: val('f-ctaFinalDesc'),
-    ctaFinalText: val('f-ctaFinalText'),
-    learnItems: (val('f-learnItems') || '').split('\n').map(s=>s.trim()).filter(Boolean),
-    pricingFeatures: (val('f-pricingFeatures') || '').split('\n').map(s=>s.trim()).filter(Boolean),
-    benefits: collectBenefits(),
-    weeks: collectWeeks(),
-    monetizeItems: collectMonetize(),
-    testimonials: collectTestimonials(),
-    faqs: collectFaqs(),
-  };
+function collect(){
+  const v=id=>{const el=document.getElementById(id);return el?el.value:undefined;};
+  const pl=v('f-productLink3')||v('f-productLink2')||v('f-productLink')||C.productLink;
+  return{...C,productLink:pl,footerBrand:v('f-footerBrand'),
+    stat1Num:v('f-stat1Num'),stat1Label:v('f-stat1Label'),stat2Num:v('f-stat2Num'),stat2Label:v('f-stat2Label'),
+    stat3Num:v('f-stat3Num'),stat3Label:v('f-stat3Label'),stat4Num:v('f-stat4Num'),stat4Label:v('f-stat4Label'),
+    whyTitle:v('f-whyTitle'),whySubtitle:v('f-whySubtitle'),
+    heroBadge:v('f-heroBadge'),heroTitle:v('f-heroTitle'),heroSubtitle:v('f-heroSubtitle'),heroCtaText:v('f-heroCtaText'),
+    bookTitle:v('f-bookTitle'),bookSub:v('f-bookSub'),bookPriceBadge:v('f-bookPriceBadge'),
+    learnTitle:v('f-learnTitle'),learnDesc:v('f-learnDesc'),
+    monetizeTitle:v('f-monetizeTitle'),monetizeDesc:v('f-monetizeDesc'),
+    testimonialsTitle:v('f-testimonialsTitle'),
+    priceOld:v('f-priceOld'),priceMain:v('f-priceMain'),priceCents:v('f-priceCents'),
+    pricingCtaText:v('f-pricingCtaText'),guaranteeText:v('f-guaranteeText'),
+    ctaFinalTitle:v('f-ctaFinalTitle'),ctaFinalDesc:v('f-ctaFinalDesc'),ctaFinalText:v('f-ctaFinalText'),
+    learnItems:(v('f-learnItems')||'').split('\n').map(s=>s.trim()).filter(Boolean),
+    pricingFeatures:(v('f-pricingFeatures')||'').split('\n').map(s=>s.trim()).filter(Boolean),
+    benefits:cBen(),weeks:cWeeks(),monetizeItems:cMon(),testimonials:cTest(),faqs:cFaq()};
 }
 
-function saveAll() {
-  const btn = document.getElementById('btn-save');
-  btn.classList.add('saving');
-  btn.textContent = 'Salvando…';
-  setTimeout(() => {
-    const cfg = collectAll();
-    saveCfg(cfg);
-    updateDashCounts(cfg);
-    btn.classList.remove('saving');
-    btn.innerHTML = '<svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline stroke="currentColor" stroke-width="2" points="17 21 17 13 7 13 7 21"/><polyline stroke="currentColor" stroke-width="2" points="7 3 7 8 15 8"/></svg> Salvar Tudo';
-    const sm = document.getElementById('stats-saved');
-    const sl = document.getElementById('stats-lastsave');
-    if(sm) sm.textContent = 'Sim';
-    if(sl) sl.textContent = localStorage.getItem('iaem30_last_save') || '—';
-    toast('Tudo salvo! Abra o index.html para ver as mudanças.');
-  }, 600);
-}
-
-function saveProductLinkOnly() {
-  const cfg = getCfg();
-  cfg.productLink = document.getElementById('dash-product-link').value;
-  saveCfg(cfg);
-  toast('Link do produto salvo!');
-}
-
-function confirmReset() {
-  if(confirm('Tem certeza? Isso vai apagar todas as suas configurações e restaurar os padrões.')) {
-    localStorage.removeItem('iaem30_config');
-    loadAllFields();
-    toast('Configurações resetadas para o padrão.');
+async function saveAll(){
+  const btn=document.getElementById('btn-save');
+  btn.disabled=true; btn.textContent='Salvando…';
+  C=collect();
+  localStorage.setItem('iaem30_config',JSON.stringify(C));
+  const ok=await sbSave(C);
+  btn.disabled=false;
+  btn.innerHTML='<svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline stroke="currentColor" stroke-width="2" points="17 21 17 13 7 13 7 21"/><polyline stroke="currentColor" stroke-width="2" points="7 3 7 8 15 8"/></svg> Salvar Tudo';
+  updDash();
+  if(ok){
+    const now=new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    document.getElementById('d-save').textContent=now;
+    toast('✓ Salvo no Supabase! Site atualizado instantaneamente.');
+  } else {
+    toast('Salvo localmente. Supabase offline — tente novamente.','error');
   }
 }
 
-// ═════════════════════════════════════════════════
+async function saveLinkOnly(){
+  const link=document.getElementById('d-link').value;
+  C.productLink=link; localStorage.setItem('iaem30_config',JSON.stringify(C));
+  const ok=await sbSave(C);
+  toast(ok?'✓ Link salvo no Supabase!':'Salvo localmente. Supabase offline.',ok?'success':'error');
+}
+
+function confirmReset(){
+  if(confirm('Isso vai resetar todos os campos para os padrões. Tem certeza?')){
+    C={...DEF}; fill(); toast('Campos resetados. Clique em Salvar Tudo para confirmar.');
+  }
+}
+
 // LIST EDITORS
-// ═════════════════════════════════════════════════
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 
-// BENEFITS
-function renderBenefits(items) {
-  const el = document.getElementById('benefits-editor');
-  el.innerHTML = items.map((b,i) => `
-    <div class="list-item" id="ben-${i}">
-      <div class="list-item-body">
-        <div style="display:grid;grid-template-columns:60px 1fr;gap:8px">
-          <input type="text" placeholder="Emoji" value="${esc(b.icon)}" data-key="icon" data-i="${i}">
-          <input type="text" placeholder="Título" value="${esc(b.title)}" data-key="title" data-i="${i}">
-        </div>
-        <input type="text" placeholder="Descrição" value="${esc(b.desc)}" data-key="desc" data-i="${i}">
+function rBen(items){
+  document.getElementById('benefits-editor').innerHTML=items.map((b,i)=>`
+    <div class="li"><div class="li-body">
+      <div style="display:grid;grid-template-columns:64px 1fr;gap:8px">
+        <input placeholder="Emoji" value="${esc(b.icon)}" data-k="icon" data-i="${i}">
+        <input placeholder="Título" value="${esc(b.title)}" data-k="title" data-i="${i}">
       </div>
-      <div class="list-item-actions">
-        <button class="btn-icon" title="Mover acima" onclick="moveBenefit(${i},-1)">↑</button>
-        <button class="btn-icon" title="Mover abaixo" onclick="moveBenefit(${i},1)">↓</button>
-        <button class="btn-icon danger" title="Remover" onclick="removeBenefit(${i})">✕</button>
-      </div>
-    </div>`).join('');
+      <input placeholder="Descrição" value="${esc(b.desc)}" data-k="desc" data-i="${i}">
+    </div><div class="li-acts">
+      <button class="btn-ic" onclick="mvBen(${i},-1)">↑</button>
+      <button class="btn-ic" onclick="mvBen(${i},1)">↓</button>
+      <button class="btn-ic d" onclick="rmBen(${i})">✕</button>
+    </div></div>`).join('');
 }
-function collectBenefits() {
-  const cfg = getCfg();
-  const items = cfg.benefits || [];
-  document.querySelectorAll('#benefits-editor input').forEach(inp => {
-    const i = +inp.dataset.i, key = inp.dataset.key;
-    if(items[i]) items[i][key] = inp.value;
-  });
-  return items;
-}
-function addBenefit() {
-  const cfg = getCfg(); cfg.benefits = collectBenefits();
-  cfg.benefits.push({ icon: '✨', title: 'Novo Benefício', desc: 'Descrição do benefício.' });
-  renderBenefits(cfg.benefits);
-}
-function removeBenefit(i) {
-  const cfg = getCfg(); cfg.benefits = collectBenefits();
-  cfg.benefits.splice(i, 1); renderBenefits(cfg.benefits);
-}
-function moveBenefit(i, dir) {
-  const cfg = getCfg(); cfg.benefits = collectBenefits();
-  const arr = cfg.benefits; const j = i + dir;
-  if(j < 0 || j >= arr.length) return;
-  [arr[i], arr[j]] = [arr[j], arr[i]]; renderBenefits(arr);
-}
+function cBen(){const a=JSON.parse(JSON.stringify(C.benefits||[]));document.querySelectorAll('#benefits-editor input').forEach(x=>{const i=+x.dataset.i,k=x.dataset.k;if(a[i])a[i][k]=x.value;});return a;}
+function addBenefit(){C.benefits=cBen();C.benefits.push({icon:'✨',title:'Novo Benefício',desc:'Descrição aqui.'});rBen(C.benefits);}
+function rmBen(i){C.benefits=cBen();C.benefits.splice(i,1);rBen(C.benefits);}
+function mvBen(i,d){C.benefits=cBen();const a=C.benefits,j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];rBen(a);}
 
-// WEEKS
-function renderWeeks(items) {
-  const el = document.getElementById('weeks-editor');
-  el.innerHTML = items.map((w,i) => `
-    <div class="list-item">
-      <div class="list-item-body">
-        <div style="display:grid;grid-template-columns:70px 1fr;gap:8px">
-          <input type="text" placeholder="Nº" value="${esc(w.num)}" data-key="num" data-i="${i}">
-          <input type="text" placeholder="Título" value="${esc(w.title)}" data-key="title" data-i="${i}">
-        </div>
-        <input type="text" placeholder="Descrição curta" value="${esc(w.desc)}" data-key="desc" data-i="${i}">
+function rWeeks(items){
+  document.getElementById('weeks-editor').innerHTML=items.map((w,i)=>`
+    <div class="li"><div class="li-body">
+      <div style="display:grid;grid-template-columns:64px 1fr;gap:8px">
+        <input placeholder="Nº" value="${esc(w.num)}" data-k="num" data-i="${i}">
+        <input placeholder="Título" value="${esc(w.title)}" data-k="title" data-i="${i}">
       </div>
-      <div class="list-item-actions">
-        <button class="btn-icon danger" onclick="removeWeek(${i})">✕</button>
-      </div>
-    </div>`).join('');
+      <input placeholder="Descrição" value="${esc(w.desc)}" data-k="desc" data-i="${i}">
+    </div><div class="li-acts"><button class="btn-ic d" onclick="rmWeek(${i})">✕</button></div></div>`).join('');
 }
-function collectWeeks() {
-  const cfg = getCfg(); const items = cfg.weeks || [];
-  document.querySelectorAll('#weeks-editor input').forEach(inp => {
-    const i = +inp.dataset.i, key = inp.dataset.key;
-    if(items[i]) items[i][key] = inp.value;
-  });
-  return items;
-}
-function addWeek() {
-  const cfg = getCfg(); cfg.weeks = collectWeeks();
-  const n = cfg.weeks.length + 1;
-  cfg.weeks.push({ num: String(n).padStart(2,'0'), title: 'Nova Semana', desc: 'Descrição da semana.' });
-  renderWeeks(cfg.weeks);
-}
-function removeWeek(i) {
-  const cfg = getCfg(); cfg.weeks = collectWeeks();
-  cfg.weeks.splice(i, 1); renderWeeks(cfg.weeks);
-}
+function cWeeks(){const a=JSON.parse(JSON.stringify(C.weeks||[]));document.querySelectorAll('#weeks-editor input').forEach(x=>{const i=+x.dataset.i,k=x.dataset.k;if(a[i])a[i][k]=x.value;});return a;}
+function addWeek(){C.weeks=cWeeks();C.weeks.push({num:String(C.weeks.length+1).padStart(2,'0'),title:'Nova Semana',desc:'Descrição.'});rWeeks(C.weeks);}
+function rmWeek(i){C.weeks=cWeeks();C.weeks.splice(i,1);rWeeks(C.weeks);}
 
-// MONETIZE
-function renderMonetize(items) {
-  const el = document.getElementById('monetize-editor');
-  el.innerHTML = items.map((m,i) => `
-    <div class="list-item">
-      <div class="list-item-body">
-        <div style="display:grid;grid-template-columns:70px 1fr;gap:8px">
-          <input type="text" placeholder="Nº" value="${esc(m.num)}" data-key="num" data-i="${i}">
-          <input type="text" placeholder="Título" value="${esc(m.title)}" data-key="title" data-i="${i}">
-        </div>
-        <input type="text" placeholder="Descrição" value="${esc(m.desc)}" data-key="desc" data-i="${i}">
+function rMon(items){
+  document.getElementById('monetize-editor').innerHTML=items.map((m,i)=>`
+    <div class="li"><div class="li-body">
+      <div style="display:grid;grid-template-columns:64px 1fr;gap:8px">
+        <input placeholder="Nº" value="${esc(m.num)}" data-k="num" data-i="${i}">
+        <input placeholder="Título" value="${esc(m.title)}" data-k="title" data-i="${i}">
       </div>
-      <div class="list-item-actions">
-        <button class="btn-icon danger" onclick="removeMonetize(${i})">✕</button>
-      </div>
-    </div>`).join('');
+      <input placeholder="Descrição" value="${esc(m.desc)}" data-k="desc" data-i="${i}">
+    </div><div class="li-acts"><button class="btn-ic d" onclick="rmMon(${i})">✕</button></div></div>`).join('');
 }
-function collectMonetize() {
-  const cfg = getCfg(); const items = cfg.monetizeItems || [];
-  document.querySelectorAll('#monetize-editor input').forEach(inp => {
-    const i = +inp.dataset.i, key = inp.dataset.key;
-    if(items[i]) items[i][key] = inp.value;
-  });
-  return items;
-}
-function addMonetize() {
-  const cfg = getCfg(); cfg.monetizeItems = collectMonetize();
-  const n = cfg.monetizeItems.length + 1;
-  cfg.monetizeItems.push({ num: String(n).padStart(2,'0'), title: 'Nova Forma', desc: 'Como monetizar.' });
-  renderMonetize(cfg.monetizeItems);
-}
-function removeMonetize(i) {
-  const cfg = getCfg(); cfg.monetizeItems = collectMonetize();
-  cfg.monetizeItems.splice(i, 1); renderMonetize(cfg.monetizeItems);
-}
+function cMon(){const a=JSON.parse(JSON.stringify(C.monetizeItems||[]));document.querySelectorAll('#monetize-editor input').forEach(x=>{const i=+x.dataset.i,k=x.dataset.k;if(a[i])a[i][k]=x.value;});return a;}
+function addMonetize(){C.monetizeItems=cMon();C.monetizeItems.push({num:String(C.monetizeItems.length+1).padStart(2,'0'),title:'Nova Forma',desc:'Descrição.'});rMon(C.monetizeItems);}
+function rmMon(i){C.monetizeItems=cMon();C.monetizeItems.splice(i,1);rMon(C.monetizeItems);}
 
-// TESTIMONIALS
-function renderTestimonials(items) {
-  const el = document.getElementById('testimonials-editor');
-  el.innerHTML = items.map((t,i) => `
-    <div class="list-item">
-      <div class="list-item-body">
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-          <input type="text" placeholder="Emoji avatar" value="${esc(t.avatar)}" data-key="avatar" data-i="${i}" style="width:70px">
-          <input type="text" placeholder="Nome" value="${esc(t.name)}" data-key="name" data-i="${i}" style="flex:1">
-          <input type="text" placeholder="Cargo / Profissão" value="${esc(t.role)}" data-key="role" data-i="${i}" style="flex:1">
-        </div>
-        <textarea placeholder="Texto do depoimento" rows="2" data-key="text" data-i="${i}">${esc(t.text)}</textarea>
-        <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);">
-          Estrelas:
-          <div class="star-row" id="stars-${i}">
-            ${[1,2,3,4,5].map(s=>`<button class="star-btn ${s<=t.stars?'on':''}" onclick="setStar(${i},${s})" data-s="${s}">★</button>`).join('')}
-          </div>
-        </div>
+function rTest(items){
+  document.getElementById('testimonials-editor').innerHTML=items.map((t,i)=>`
+    <div class="li"><div class="li-body">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input placeholder="Emoji" value="${esc(t.avatar)}" data-k="avatar" data-i="${i}" style="width:64px">
+        <input placeholder="Nome" value="${esc(t.name)}" data-k="name" data-i="${i}" style="flex:1;min-width:100px">
+        <input placeholder="Profissão" value="${esc(t.role)}" data-k="role" data-i="${i}" style="flex:1;min-width:100px">
       </div>
-      <div class="list-item-actions">
-        <button class="btn-icon danger" onclick="removeTestimonial(${i})">✕</button>
+      <textarea rows="2" placeholder="Texto do depoimento" data-k="text" data-i="${i}">${esc(t.text)}</textarea>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)">Estrelas:
+        <div class="star-row" id="sr-${i}">${[1,2,3,4,5].map(s=>`<button class="star-btn ${s<=t.stars?'on':''}" onclick="setStar(${i},${s})" data-s="${s}">★</button>`).join('')}</div>
       </div>
-    </div>`).join('');
+    </div><div class="li-acts"><button class="btn-ic d" onclick="rmTest(${i})">✕</button></div></div>`).join('');
 }
-function setStar(i, s) {
-  const row = document.getElementById('stars-' + i);
-  row.querySelectorAll('.star-btn').forEach(b => b.classList.toggle('on', +b.dataset.s <= s));
+function setStar(i,s){document.getElementById('sr-'+i).querySelectorAll('.star-btn').forEach(b=>b.classList.toggle('on',+b.dataset.s<=s));}
+function cTest(){
+  const a=JSON.parse(JSON.stringify(C.testimonials||[]));
+  document.querySelectorAll('#testimonials-editor [data-i]').forEach(x=>{const i=+x.dataset.i,k=x.dataset.k;if(!a[i]||k==='stars')return;a[i][k]=x.tagName==='TEXTAREA'?x.value:x.value;});
+  a.forEach((t,i)=>{const row=document.getElementById('sr-'+i);if(!row)return;let s=0;row.querySelectorAll('.star-btn.on').forEach(()=>s++);t.stars=s||5;});
+  return a;
 }
-function collectTestimonials() {
-  const cfg = getCfg(); const items = cfg.testimonials || [];
-  document.querySelectorAll('#testimonials-editor [data-i]').forEach(inp => {
-    const i = +inp.dataset.i, key = inp.dataset.key;
-    if(!items[i]) return;
-    if(key !== 'stars') items[i][key] = inp.tagName === 'TEXTAREA' ? inp.value : inp.value;
-  });
-  // collect stars
-  items.forEach((t,i) => {
-    const row = document.getElementById('stars-'+i);
-    if(!row) return;
-    let s = 0; row.querySelectorAll('.star-btn.on').forEach(() => s++);
-    t.stars = s || 5;
-  });
-  return items;
-}
-function addTestimonial() {
-  const cfg = getCfg(); cfg.testimonials = collectTestimonials();
-  cfg.testimonials.push({ stars:5, text:'"Depoimento incrível sobre o produto."', name:'Nome', role:'Profissão', avatar:'⭐' });
-  renderTestimonials(cfg.testimonials);
-}
-function removeTestimonial(i) {
-  const cfg = getCfg(); cfg.testimonials = collectTestimonials();
-  cfg.testimonials.splice(i,1); renderTestimonials(cfg.testimonials);
-}
+function addTest(){C.testimonials=cTest();C.testimonials.push({stars:5,text:'"Depoimento aqui."',name:'Nome',role:'Profissão',avatar:'⭐'});rTest(C.testimonials);}
+function rmTest(i){C.testimonials=cTest();C.testimonials.splice(i,1);rTest(C.testimonials);}
 
-// FAQ
-function renderFaqs(items) {
-  const el = document.getElementById('faq-editor');
-  el.innerHTML = items.map((f,i) => `
-    <div class="list-item">
-      <div class="list-item-body">
-        <input type="text" placeholder="Pergunta" value="${esc(f.q)}" data-key="q" data-i="${i}">
-        <textarea rows="2" placeholder="Resposta" data-key="a" data-i="${i}">${esc(f.a)}</textarea>
-      </div>
-      <div class="list-item-actions">
-        <button class="btn-icon danger" onclick="removeFaq(${i})">✕</button>
-      </div>
-    </div>`).join('');
+function rFaq(items){
+  document.getElementById('faq-editor').innerHTML=items.map((f,i)=>`
+    <div class="li"><div class="li-body">
+      <input placeholder="Pergunta" value="${esc(f.q)}" data-k="q" data-i="${i}">
+      <textarea rows="2" placeholder="Resposta" data-k="a" data-i="${i}">${esc(f.a)}</textarea>
+    </div><div class="li-acts"><button class="btn-ic d" onclick="rmFaq(${i})">✕</button></div></div>`).join('');
 }
-function collectFaqs() {
-  const cfg = getCfg(); const items = cfg.faqs || [];
-  document.querySelectorAll('#faq-editor [data-i]').forEach(inp => {
-    const i = +inp.dataset.i, key = inp.dataset.key;
-    if(items[i]) items[i][key] = inp.tagName === 'TEXTAREA' ? inp.value : inp.value;
-  });
-  return items;
-}
-function addFaq() {
-  const cfg = getCfg(); cfg.faqs = collectFaqs();
-  cfg.faqs.push({ q: 'Nova pergunta?', a: 'Resposta aqui.' });
-  renderFaqs(cfg.faqs);
-}
-function removeFaq(i) {
-  const cfg = getCfg(); cfg.faqs = collectFaqs();
-  cfg.faqs.splice(i,1); renderFaqs(cfg.faqs);
-}
+function cFaq(){const a=JSON.parse(JSON.stringify(C.faqs||[]));document.querySelectorAll('#faq-editor [data-i]').forEach(x=>{const i=+x.dataset.i,k=x.dataset.k;if(a[i])a[i][k]=x.tagName==='TEXTAREA'?x.value:x.value;});return a;}
+function addFaq(){C.faqs=cFaq();C.faqs.push({q:'Nova pergunta?',a:'Resposta aqui.'});rFaq(C.faqs);}
+function rmFaq(i){C.faqs=cFaq();C.faqs.splice(i,1);rFaq(C.faqs);}
 
-// ═════════════════════════════════════════════════
-// EXPORT / IMPORT
-// ═════════════════════════════════════════════════
-function exportConfig() {
-  const cfg = collectAll();
-  const blob = new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'iaem30-config.json';
-  a.click();
-  toast('Config exportada!');
-}
-function importConfig() {
-  document.getElementById('import-file').click();
-}
-function handleImport(e) {
-  const file = e.target.files[0]; if(!file) return;
-  const r = new FileReader();
-  r.onload = () => {
-    try {
-      const cfg = JSON.parse(r.result);
-      saveCfg({ ...DEFAULTS, ...cfg });
-      loadAllFields();
-      toast('Config importada com sucesso!');
-    } catch { toast('Arquivo inválido.', 'error'); }
-  };
-  r.readAsText(file);
-}
+function exportCfg(){const b=new Blob([JSON.stringify(collect(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='iaem30-config.json';a.click();toast('Config exportada!');}
+function importCfg(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{C={...DEF,...JSON.parse(r.result)};fill();toast('Config importada! Clique Salvar Tudo para publicar.');}catch{toast('Arquivo inválido.','error');}};r.readAsText(f);}
 
-// ═════════════════════════════════════════════════
-// UTILS
-// ═════════════════════════════════════════════════
-function esc(s) {
-  return String(s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-}
-
-let toastTimer;
-function toast(msg, type = 'success') {
-  const el = document.getElementById('toast');
-  const icon = document.getElementById('toast-icon');
-  const m = document.getElementById('toast-msg');
-  el.className = 'show ' + type;
-  icon.textContent = type === 'error' ? '✕' : '✓';
-  m.textContent = msg;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+let _tt;
+function toast(msg,type='success'){
+  const el=document.getElementById('toast');
+  el.className='show '+type;
+  document.getElementById('ti').textContent=type==='error'?'✕':'✓';
+  document.getElementById('tm').textContent=msg;
+  clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),4000);
 }
 </script>
 </body>

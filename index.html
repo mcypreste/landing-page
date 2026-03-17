@@ -647,9 +647,28 @@
 </footer>
 
 <script>
-// ═══════════════════════════════════════════════════════
-// DEFAULT CONTENT (used if no admin config saved)
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
+// SUPABASE
+// ═══════════════════════════════════════
+const SB_URL  = 'https://ihylwxjxjajtdhsnlrfm.supabase.co';
+const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloeWx3eGp4amFqdGRoc25scmZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MDQyNjYsImV4cCI6MjA4OTA4MDI2Nn0.CVVtGeSrg47hSm_WKX-EaQhzaUilrLXhKZnKdJkzepY';
+
+async function fetchRemoteConfig() {
+  try {
+    const res = await fetch(
+      `${SB_URL}/rest/v1/iaem30_config?id=eq.1&select=config`,
+      { headers: { apikey: SB_ANON, Authorization: 'Bearer ' + SB_ANON } }
+    );
+    if (!res.ok) return null;
+    const rows = await res.json();
+    const cfg = rows?.[0]?.config;
+    return (cfg && Object.keys(cfg).length > 0) ? cfg : null;
+  } catch(e) { return null; }
+}
+
+// ═══════════════════════════════════════
+// DEFAULTS
+// ═══════════════════════════════════════
 const DEFAULTS = {
   productLink: 'https://go.perfectpay.com.br/PPU38CQ4TBC',
   heroTitle: 'Como Ganhar Dinheiro com <span class="highlight">IA em 30 Dias</span>',
@@ -659,35 +678,33 @@ const DEFAULTS = {
   bookTitle: 'Como Ganhar Dinheiro com IA em 30 Dias',
   bookSub: 'Guia Prático para Criadores Independentes',
   bookPriceBadge: 'R$19,90',
-  stat1Num: '1.200+', stat1Label: 'criadores impactados',
-  stat2Num: '⭐ 4.9', stat2Label: 'avaliação média',
-  stat3Num: '7 dias', stat3Label: 'de garantia total',
-  stat4Num: '30 dias', stat4Label: 'para transformação',
-  whyTitle: 'IA: Sua Aliada Criativa',
-  whySubtitle: 'A Inteligência Artificial está mudando o jogo. Artistas ao redor do mundo já estão usando IA para criar mais rápido, vender melhor e alcançar públicos maiores.',
-  learnTitle: 'O que você vai aprender',
-  learnDesc: 'Um método estruturado semana a semana para você sair do zero à sua primeira renda com IA.',
-  monetizeTitle: 'Transforme Sua Criação em Renda Real',
-  monetizeDesc: 'Descubra 5 caminhos comprovados para monetizar seu talento criativo usando IA.',
-  testimonialsTitle: 'O que dizem nossos leitores',
-  priceOld: 'R$47',
-  priceMain: '19',
-  priceCents: ',90',
-  pricingCtaText: 'Quero Meu Ebook Agora →',
-  guaranteeText: 'Garantia de 7 dias. Se não ficar satisfeito, devolvemos 100% do seu dinheiro — sem perguntas.',
-  ctaFinalTitle: 'Sua Decisão, Seu Futuro',
-  ctaFinalDesc: 'Ser criador independente hoje não é apenas criar — é empreender a própria arte. A IA amplifica sua voz.',
-  ctaFinalText: 'Começar Minha Transformação →',
-  footerBrand: 'IA em 30',
-  benefits: [
-    { icon: '🧠', title: 'Remove Bloqueios Criativos', desc: 'Supere o bloqueio com ideias instantâneas e variações ilimitadas para sua criação.' },
-    { icon: '⚡', title: 'Acelera Seus Processos', desc: 'Produza em horas o que levaria dias ou semanas manualmente. Mais tempo para criar.' },
-    { icon: '💰', title: 'Reduz Seus Custos', desc: 'Elimine gastos com ferramentas caras e terceirização. IA democratiza a produção.' },
-    { icon: '🎨', title: 'Profissionaliza Sua Marca', desc: 'Crie uma identidade visual forte e consistente para sua marca criativa.' },
-    { icon: '🛠️', title: 'Ferramentas para Cada Criação', desc: 'Midjourney, ChatGPT, Soundraw, CapCut IA — tudo explicado passo a passo.' },
-    { icon: '🤝', title: 'IA Como Aliada', desc: 'Você continua sendo o criador. A IA é sua assistente que amplifica sua visão única.' },
+  stat1Num:'1.200+', stat1Label:'criadores impactados',
+  stat2Num:'⭐ 4.9', stat2Label:'avaliação média',
+  stat3Num:'7 dias', stat3Label:'de garantia total',
+  stat4Num:'30 dias', stat4Label:'para transformação',
+  whyTitle:'IA: Sua Aliada Criativa',
+  whySubtitle:'A Inteligência Artificial está mudando o jogo. Artistas ao redor do mundo já estão usando IA para criar mais rápido, vender melhor e alcançar públicos maiores.',
+  learnTitle:'O que você vai aprender',
+  learnDesc:'Um método estruturado semana a semana para você sair do zero à sua primeira renda com IA.',
+  monetizeTitle:'Transforme Sua Criação em Renda Real',
+  monetizeDesc:'Descubra 5 caminhos comprovados para monetizar seu talento criativo usando IA.',
+  testimonialsTitle:'O que dizem nossos leitores',
+  priceOld:'R$47', priceMain:'19', priceCents:',90',
+  pricingCtaText:'Quero Meu Ebook Agora →',
+  guaranteeText:'Garantia de 7 dias. Se não ficar satisfeito, devolvemos 100% do seu dinheiro — sem perguntas.',
+  ctaFinalTitle:'Sua Decisão, Seu Futuro',
+  ctaFinalDesc:'Ser criador independente hoje não é apenas criar — é empreender a própria arte. A IA amplifica sua voz.',
+  ctaFinalText:'Começar Minha Transformação →',
+  footerBrand:'IA em 30',
+  benefits:[
+    {icon:'🧠',title:'Remove Bloqueios Criativos',desc:'Supere o bloqueio com ideias instantâneas e variações ilimitadas para sua criação.'},
+    {icon:'⚡',title:'Acelera Seus Processos',desc:'Produza em horas o que levaria dias ou semanas manualmente. Mais tempo para criar.'},
+    {icon:'💰',title:'Reduz Seus Custos',desc:'Elimine gastos com ferramentas caras e terceirização. IA democratiza a produção.'},
+    {icon:'🎨',title:'Profissionaliza Sua Marca',desc:'Crie uma identidade visual forte e consistente para sua marca criativa.'},
+    {icon:'🛠️',title:'Ferramentas para Cada Criação',desc:'Midjourney, ChatGPT, Soundraw, CapCut IA — tudo explicado passo a passo.'},
+    {icon:'🤝',title:'IA Como Aliada',desc:'Você continua sendo o criador. A IA é sua assistente que amplifica sua visão única.'},
   ],
-  learnItems: [
+  learnItems:[
     '5 formas reais de monetizar sua criação',
     'Ferramentas de IA passo a passo (ChatGPT, Midjourney, Soundraw)',
     'Plano de ação de 30 dias completo',
@@ -695,26 +712,26 @@ const DEFAULTS = {
     'Estratégias de conteúdo para crescer nas redes',
     'Ética e direitos autorais no uso de IA',
   ],
-  weeks: [
-    { num: '01', title: 'Base Criativa', desc: 'Defina identidade, escolha nicho e configure ferramentas.' },
-    { num: '02', title: 'Produto Digital', desc: 'Desenvolva seu produto principal e construa identidade visual.' },
-    { num: '03', title: 'Visibilidade', desc: 'Produza conteúdo promocional e feche suas primeiras vendas.' },
-    { num: '04', title: 'Escala Real', desc: 'Melhore qualidade, crie pacotes premium e automatize.' },
+  weeks:[
+    {num:'01',title:'Base Criativa',desc:'Defina identidade, escolha nicho e configure ferramentas.'},
+    {num:'02',title:'Produto Digital',desc:'Desenvolva seu produto principal e construa identidade visual.'},
+    {num:'03',title:'Visibilidade',desc:'Produza conteúdo promocional e feche suas primeiras vendas.'},
+    {num:'04',title:'Escala Real',desc:'Melhore qualidade, crie pacotes premium e automatize.'},
   ],
-  monetizeItems: [
-    { num: '01', title: 'Venda da Própria Criação', desc: 'Música autoral, ilustrações digitais, fotografias e NFTs.' },
-    { num: '02', title: 'Serviços Personalizados', desc: 'Capas de álbum, artes para redes sociais e trilhas.' },
-    { num: '03', title: 'Produtos Digitais', desc: 'Ebooks artísticos, packs de artes e prompts criativos.' },
-    { num: '04', title: 'Conteúdo Monetizado', desc: 'YouTube, TikTok, Reels e plataformas como Patreon.' },
-    { num: '05', title: 'Ensino e Consultoria', desc: 'Cursos sobre seu processo e mentorias para criadores.' },
-    { num: '06', title: 'Pacotes Premium', desc: 'Serviços completos com entrega profissional e recorrente.' },
+  monetizeItems:[
+    {num:'01',title:'Venda da Própria Criação',desc:'Música autoral, ilustrações digitais, fotografias e NFTs.'},
+    {num:'02',title:'Serviços Personalizados',desc:'Capas de álbum, artes para redes sociais e trilhas.'},
+    {num:'03',title:'Produtos Digitais',desc:'Ebooks artísticos, packs de artes e prompts criativos.'},
+    {num:'04',title:'Conteúdo Monetizado',desc:'YouTube, TikTok, Reels e plataformas como Patreon.'},
+    {num:'05',title:'Ensino e Consultoria',desc:'Cursos sobre seu processo e mentorias para criadores.'},
+    {num:'06',title:'Pacotes Premium',desc:'Serviços completos com entrega profissional e recorrente.'},
   ],
-  testimonials: [
-    { stars: 5, text: '"Comecei do zero e em 3 semanas já estava vendendo artes digitais no Instagram. O método é claro e direto ao ponto!"', name: 'Ana Silva', role: 'Ilustradora Digital', avatar: '🎨' },
-    { stars: 5, text: '"Como músico, achei que IA ia competir comigo. Mas esse ebook mostrou como usar como ferramenta. Já ganhei R$1.800 num mês!"', name: 'Carlos M.', role: 'Produtor Musical', avatar: '🎵' },
-    { stars: 5, text: '"Investimento que se pagou em 3 dias. A parte de monetização com conteúdo foi um divisor de águas para minha carreira."', name: 'Juliana R.', role: 'Designer Gráfica', avatar: '✨' },
+  testimonials:[
+    {stars:5,text:'"Comecei do zero e em 3 semanas já estava vendendo artes digitais no Instagram. O método é claro e direto ao ponto!"',name:'Ana Silva',role:'Ilustradora Digital',avatar:'🎨'},
+    {stars:5,text:'"Como músico, achei que IA ia competir comigo. Mas esse ebook mostrou como usar como ferramenta. Já ganhei R$1.800 num mês!"',name:'Carlos M.',role:'Produtor Musical',avatar:'🎵'},
+    {stars:5,text:'"Investimento que se pagou em 3 dias. A parte de monetização com conteúdo foi um divisor de águas para minha carreira."',name:'Juliana R.',role:'Designer Gráfica',avatar:'✨'},
   ],
-  pricingFeatures: [
+  pricingFeatures:[
     'Ebook completo em PDF (180+ páginas)',
     '5 formas reais de monetizar sua criação',
     'Ferramentas de IA passo a passo',
@@ -722,143 +739,79 @@ const DEFAULTS = {
     'Dicas de ética e direitos autorais',
     'Download imediato + Acesso vitalício',
   ],
-  faqs: [
-    { q: 'Preciso ter conhecimento prévio em IA?', a: 'Não! O ebook foi feito do zero ao avançado, com tutoriais passo a passo fáceis de seguir.' },
-    { q: 'Funciona para qualquer tipo de artista?', a: 'Sim! Abordamos ferramentas específicas para músicos, ilustradores, designers, escritores, fotógrafos e videomakers.' },
-    { q: 'Usar IA não vai tirar minha autenticidade?', a: 'Pelo contrário. IA é uma ferramenta para acelerar sua produção técnica, permitindo que você foque mais na sua essência criativa.' },
-    { q: 'Quanto tempo leva para ter resultados?', a: 'O plano é estruturado para 30 dias. Muitos leitores relatam resultados nas primeiras 2 semanas de aplicação.' },
+  faqs:[
+    {q:'Preciso ter conhecimento prévio em IA?',a:'Não! O ebook foi feito do zero ao avançado, com tutoriais passo a passo fáceis de seguir.'},
+    {q:'Funciona para qualquer tipo de artista?',a:'Sim! Abordamos ferramentas específicas para músicos, ilustradores, designers, escritores, fotógrafos e videomakers.'},
+    {q:'Usar IA não vai tirar minha autenticidade?',a:'Pelo contrário. IA é uma ferramenta para acelerar sua produção técnica, permitindo que você foque mais na sua essência criativa.'},
+    {q:'Quanto tempo leva para ter resultados?',a:'O plano é estruturado para 30 dias. Muitos leitores relatam resultados nas primeiras 2 semanas de aplicação.'},
   ]
 };
 
-// ═══════════════════════════════════════════════════════
-// LOAD CONFIG & RENDER
-// ═══════════════════════════════════════════════════════
-function loadConfig() {
-  try {
-    const saved = localStorage.getItem('iaem30_config');
-    return saved ? { ...DEFAULTS, ...JSON.parse(saved) } : DEFAULTS;
-  } catch(e) { return DEFAULTS; }
-}
-
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
 function applyConfig(cfg) {
-  // CTA Links
   const link = cfg.productLink || DEFAULTS.productLink;
   ['hero-cta-btn','header-cta-btn','pricing-cta-btn','cta-final-btn'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.href = link;
+    const el = document.getElementById(id); if(el) el.href = link;
   });
-
-  // Simple text fields
   const fields = {
-    'hero-badge': 'heroBadge', 'hero-title': 'heroTitle',
-    'hero-subtitle': 'heroSubtitle', 'hero-cta-text': 'heroCtaText',
-    'book-title': 'bookTitle', 'book-sub': 'bookSub', 'book-price-badge': 'bookPriceBadge',
-    'stat-1-num': 'stat1Num', 'stat-1-label': 'stat1Label',
-    'stat-2-num': 'stat2Num', 'stat-2-label': 'stat2Label',
-    'stat-3-num': 'stat3Num', 'stat-3-label': 'stat3Label',
-    'stat-4-num': 'stat4Num', 'stat-4-label': 'stat4Label',
-    'why-title': 'whyTitle', 'why-subtitle': 'whySubtitle',
-    'learn-title': 'learnTitle', 'learn-desc': 'learnDesc',
-    'monetize-title': 'monetizeTitle', 'monetize-desc': 'monetizeDesc',
-    'testimonials-title': 'testimonialsTitle',
-    'price-old': 'priceOld', 'price-main': 'priceMain', 'price-cents': 'priceCents',
-    'pricing-cta-text': 'pricingCtaText', 'guarantee-text': 'guaranteeText',
-    'cta-final-title': 'ctaFinalTitle', 'cta-final-desc': 'ctaFinalDesc',
-    'cta-final-text': 'ctaFinalText', 'footer-brand': 'footerBrand',
+    'hero-badge':'heroBadge','hero-title':'heroTitle','hero-subtitle':'heroSubtitle',
+    'hero-cta-text':'heroCtaText','book-title':'bookTitle','book-sub':'bookSub',
+    'book-price-badge':'bookPriceBadge',
+    'stat-1-num':'stat1Num','stat-1-label':'stat1Label',
+    'stat-2-num':'stat2Num','stat-2-label':'stat2Label',
+    'stat-3-num':'stat3Num','stat-3-label':'stat3Label',
+    'stat-4-num':'stat4Num','stat-4-label':'stat4Label',
+    'why-title':'whyTitle','why-subtitle':'whySubtitle',
+    'learn-title':'learnTitle','learn-desc':'learnDesc',
+    'monetize-title':'monetizeTitle','monetize-desc':'monetizeDesc',
+    'testimonials-title':'testimonialsTitle',
+    'price-old':'priceOld','price-main':'priceMain','price-cents':'priceCents',
+    'pricing-cta-text':'pricingCtaText','guarantee-text':'guaranteeText',
+    'cta-final-title':'ctaFinalTitle','cta-final-desc':'ctaFinalDesc',
+    'cta-final-text':'ctaFinalText','footer-brand':'footerBrand',
   };
-  for(const [id, key] of Object.entries(fields)) {
-    const el = document.getElementById(id);
-    if(el && cfg[key] !== undefined) el.innerHTML = cfg[key];
+  for(const [id,key] of Object.entries(fields)){
+    const el=document.getElementById(id); if(el&&cfg[key]!=null) el.innerHTML=cfg[key];
   }
-
-  // Benefits
-  const benefitsEl = document.getElementById('benefits-grid');
-  if(benefitsEl && cfg.benefits) {
-    benefitsEl.innerHTML = cfg.benefits.map(b => `
-      <div class="benefit-card">
-        <div class="benefit-icon">${b.icon}</div>
-        <h3>${b.title}</h3>
-        <p>${b.desc}</p>
-      </div>`).join('');
-  }
-
-  // Learn list
-  const learnEl = document.getElementById('learn-list');
-  if(learnEl && cfg.learnItems) {
-    learnEl.innerHTML = cfg.learnItems.map(i => `<li>${i}</li>`).join('');
-  }
-
-  // Weeks
-  const weeksEl = document.getElementById('weeks-grid');
-  if(weeksEl && cfg.weeks) {
-    weeksEl.innerHTML = cfg.weeks.map(w => `
-      <div class="week-card">
-        <div class="week-num">${w.num}</div>
-        <div>
-          <h4>${w.title}</h4>
-          <p>${w.desc}</p>
-        </div>
-      </div>`).join('');
-  }
-
-  // Monetize
-  const monetizeEl = document.getElementById('monetize-grid');
-  if(monetizeEl && cfg.monetizeItems) {
-    monetizeEl.innerHTML = cfg.monetizeItems.map(m => `
-      <div class="monetize-card">
-        <span class="m-num">${m.num}</span>
-        <h3>${m.title}</h3>
-        <p>${m.desc}</p>
-      </div>`).join('');
-  }
-
-  // Testimonials
-  const testimonialsEl = document.getElementById('testimonials-grid');
-  if(testimonialsEl && cfg.testimonials) {
-    testimonialsEl.innerHTML = cfg.testimonials.map(t => `
-      <div class="testimonial-card">
-        <div class="stars">${'★'.repeat(t.stars)}</div>
-        <p class="testimonial-text">${t.text}</p>
-        <div class="testimonial-author">
-          <div class="author-avatar">${t.avatar}</div>
-          <div>
-            <div class="author-name">${t.name}</div>
-            <div class="author-role">${t.role}</div>
-          </div>
-        </div>
-      </div>`).join('');
-  }
-
-  // Pricing features
-  const pfEl = document.getElementById('pricing-features');
-  if(pfEl && cfg.pricingFeatures) {
-    pfEl.innerHTML = cfg.pricingFeatures.map(f => `<li>${f}</li>`).join('');
-  }
-
-  // FAQs
-  const faqEl = document.getElementById('faq-grid');
-  if(faqEl && cfg.faqs) {
-    faqEl.innerHTML = cfg.faqs.map((f, i) => `
-      <div class="faq-item" id="faq-${i}">
-        <div class="faq-q" onclick="toggleFaq(${i})">
-          ${f.q} <span class="faq-icon">+</span>
-        </div>
-        <div class="faq-a">${f.a}</div>
-      </div>`).join('');
-  }
-
-  // Footer year
-  document.getElementById('footer-year').textContent = new Date().getFullYear();
+  const benefitsEl=document.getElementById('benefits-grid');
+  if(benefitsEl&&cfg.benefits) benefitsEl.innerHTML=cfg.benefits.map(b=>`
+    <div class="benefit-card"><div class="benefit-icon">${b.icon}</div><h3>${b.title}</h3><p>${b.desc}</p></div>`).join('');
+  const learnEl=document.getElementById('learn-list');
+  if(learnEl&&cfg.learnItems) learnEl.innerHTML=cfg.learnItems.map(i=>`<li>${i}</li>`).join('');
+  const weeksEl=document.getElementById('weeks-grid');
+  if(weeksEl&&cfg.weeks) weeksEl.innerHTML=cfg.weeks.map(w=>`
+    <div class="week-card"><div class="week-num">${w.num}</div><div><h4>${w.title}</h4><p>${w.desc}</p></div></div>`).join('');
+  const monetizeEl=document.getElementById('monetize-grid');
+  if(monetizeEl&&cfg.monetizeItems) monetizeEl.innerHTML=cfg.monetizeItems.map(m=>`
+    <div class="monetize-card"><span class="m-num">${m.num}</span><h3>${m.title}</h3><p>${m.desc}</p></div>`).join('');
+  const testimonialsEl=document.getElementById('testimonials-grid');
+  if(testimonialsEl&&cfg.testimonials) testimonialsEl.innerHTML=cfg.testimonials.map(t=>`
+    <div class="testimonial-card"><div class="stars">${'★'.repeat(t.stars)}</div><p class="testimonial-text">${t.text}</p>
+    <div class="testimonial-author"><div class="author-avatar">${t.avatar}</div>
+    <div><div class="author-name">${t.name}</div><div class="author-role">${t.role}</div></div></div></div>`).join('');
+  const pfEl=document.getElementById('pricing-features');
+  if(pfEl&&cfg.pricingFeatures) pfEl.innerHTML=cfg.pricingFeatures.map(f=>`<li>${f}</li>`).join('');
+  const faqEl=document.getElementById('faq-grid');
+  if(faqEl&&cfg.faqs) faqEl.innerHTML=cfg.faqs.map((f,i)=>`
+    <div class="faq-item" id="faq-${i}">
+      <div class="faq-q" onclick="toggleFaq(${i})">${f.q}<span class="faq-icon">+</span></div>
+      <div class="faq-a">${f.a}</div></div>`).join('');
+  document.getElementById('footer-year').textContent=new Date().getFullYear();
 }
 
 function toggleFaq(i) {
-  const item = document.getElementById('faq-' + i);
-  item.classList.toggle('open');
+  document.getElementById('faq-'+i).classList.toggle('open');
 }
 
-// Init
-const cfg = loadConfig();
-applyConfig(cfg);
+// ═══════════════════════════════════════
+// INIT — Supabase first, fallback to defaults
+// ═══════════════════════════════════════
+(async () => {
+  const remote = await fetchRemoteConfig();
+  applyConfig(remote ? { ...DEFAULTS, ...remote } : DEFAULTS);
+})();
 </script>
 </body>
 </html>
