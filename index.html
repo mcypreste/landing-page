@@ -451,6 +451,7 @@
   <div class="container">
     <div class="hero-grid">
       <div>
+        <div class="live-badge"><span class="live-dot"></span><span id="live-count">47</span> <span id="live-text">pessoas vendo agora</span></div>
         <div class="hero-label">
           <span class="badge" id="hero-badge">🔥 Mais de 1.200 criadores já transformaram</span>
         </div>
@@ -608,6 +609,50 @@
   </div>
 </section>
 
+
+<!-- FOR / NOT FOR -->
+<section style="padding:80px 0;background:var(--surface)" id="para-quem">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Para quem é</span>
+      <h2 id="fnf-title">Este ebook é para você?</h2>
+    </div>
+    <div class="fornotfor-grid" id="fornotfor-grid">
+      <!-- populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- BONUS -->
+<section class="bonus-section" id="bonus">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Bônus exclusivos</span>
+      <h2 id="bonus-title">Comprando hoje você leva também</h2>
+      <p id="bonus-desc">Bônus disponíveis apenas nesta oferta especial</p>
+    </div>
+    <div class="bonus-grid" id="bonus-grid">
+      <!-- populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section class="video-section" id="video-section" style="display:none">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Apresentação</span>
+      <h2 id="video-title">Veja o que você vai receber</h2>
+    </div>
+    <div class="video-wrapper" id="video-wrapper">
+      <div class="video-placeholder">
+        <div class="vp-icon">▶️</div>
+        <p>Vídeo de apresentação</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- FAQ -->
 <section class="faq-section" id="faq">
   <div class="container">
@@ -646,25 +691,284 @@
   </div>
 </footer>
 
+
+<!-- ═══════ BARRA FLUTUANTE ═══════ -->
+<div id="sticky-bar" style="display:none">
+  <div class="sticky-inner">
+    <div class="sticky-text">
+      <strong id="sticky-title">IA em 30 Dias</strong>
+      <span id="sticky-price-label">R$19,90 — oferta por tempo limitado</span>
+    </div>
+    <button class="btn-primary" style="padding:12px 28px;font-size:15px" onclick="openModal('sticky-bar')" id="sticky-cta-btn">
+      <span id="sticky-cta-text">Quero Agora →</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════ TIMER DE URGÊNCIA ═══════ -->
+<div id="urgency-bar">
+  <span id="urgency-icon">⚡</span>
+  <span id="urgency-text">Oferta especial expira em</span>
+  <span id="countdown">00:00:00</span>
+  <span id="urgency-suffix">— garanta o preço antes que suba!</span>
+</div>
+
+<!-- ═══════ MODAL DE COMPRA ═══════ -->
+<div id="buy-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-header">
+      <div class="modal-book-icon">🤖</div>
+      <div>
+        <h3 id="modal-title">Como Ganhar Dinheiro com IA em 30 Dias</h3>
+        <p id="modal-sub">Guia Prático para Criadores Independentes</p>
+      </div>
+    </div>
+    <div class="modal-price-row">
+      <span class="modal-price-old" id="modal-price-old">R$47</span>
+      <span class="modal-price-main">R$<strong id="modal-price-main">19</strong><span id="modal-price-cents">,90</span></span>
+      <span class="modal-discount">58% OFF</span>
+    </div>
+    <ul class="modal-features" id="modal-features"></ul>
+    <a href="#" class="btn-primary" style="width:100%;font-size:17px;justify-content:center" id="modal-cta-btn" target="_blank" rel="noopener">
+      <span>🔒</span> <span id="modal-cta-text">Comprar com Segurança</span>
+    </a>
+    <div class="modal-trust">
+      <span>✅ Pagamento seguro</span>
+      <span>⚡ Download imediato</span>
+      <span>🛡️ Garantia 7 dias</span>
+    </div>
+    <div class="modal-viewers"><span class="modal-dot"></span> <span id="modal-viewers-count">23</span> <span id="modal-viewers-text">pessoas vendo agora</span></div>
+  </div>
+</div>
+
+<!-- ═══════ EXIT INTENT POPUP ═══════ -->
+<div id="exit-popup" onclick="if(event.target===this)closeExit()">
+  <div class="exit-box">
+    <button class="modal-close" onclick="closeExit()">✕</button>
+    <div class="exit-emoji">🎁</div>
+    <h3 id="exit-title">Espera! Não vai perder essa oportunidade...</h3>
+    <p id="exit-desc">Você estava prestes a sair sem garantir seu acesso. O preço especial de R$19,90 pode subir a qualquer momento.</p>
+    <button class="btn-primary" style="width:100%;font-size:16px;justify-content:center;margin-top:8px" onclick="closeExit();openModal('exit-popup')">
+      <span id="exit-cta">Quero garantir meu ebook agora →</span>
+    </button>
+    <button onclick="closeExit()" style="background:none;border:none;color:var(--muted2);font-size:13px;cursor:pointer;margin-top:14px;width:100%">Não, prefiro pagar mais caro depois</button>
+  </div>
+</div>
+
+<style>
+/* ─── URGENCY BAR ─── */
+#urgency-bar {
+  background: linear-gradient(90deg,#7c5cfc,#a78bfa);
+  color:#fff; text-align:center; padding:10px 16px;
+  font-size:14px; font-weight:500; position:sticky; top:0; z-index:200;
+  display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;
+}
+#countdown {
+  font-family:'Syne',sans-serif; font-weight:800; font-size:16px;
+  background:rgba(0,0,0,0.2); padding:2px 10px; border-radius:6px; letter-spacing:2px;
+}
+
+/* ─── STICKY BAR ─── */
+#sticky-bar {
+  position:fixed; bottom:0; left:0; right:0; z-index:190;
+  background:#12121a; border-top:1px solid rgba(124,92,252,0.3);
+  padding:12px 24px;
+  animation: slideUp .4s ease;
+}
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.sticky-inner {
+  max-width:1100px; margin:0 auto;
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+}
+.sticky-text { display:flex; flex-direction:column; }
+.sticky-text strong { font-family:'Syne',sans-serif; font-size:15px; }
+.sticky-text span { font-size:13px; color:#8b86a8; }
+
+/* ─── MODAL ─── */
+#buy-modal, #exit-popup {
+  display:none; position:fixed; inset:0; z-index:999;
+  background:rgba(0,0,0,0.7); backdrop-filter:blur(6px);
+  align-items:center; justify-content:center; padding:20px;
+}
+#buy-modal.open, #exit-popup.open { display:flex; }
+.modal-box {
+  background:#12121a; border:1px solid rgba(124,92,252,0.3);
+  border-radius:20px; padding:36px; width:100%; max-width:460px;
+  position:relative; animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+.exit-box {
+  background:#12121a; border:1px solid rgba(124,92,252,0.3);
+  border-radius:20px; padding:36px; width:100%; max-width:420px;
+  position:relative; animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);
+  text-align:center;
+}
+@keyframes modalIn { from{transform:scale(.92);opacity:0} to{transform:scale(1);opacity:1} }
+.modal-close {
+  position:absolute; top:16px; right:16px;
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+  color:#8b86a8; width:32px; height:32px; border-radius:50%;
+  cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center;
+  transition:all .2s;
+}
+.modal-close:hover { background:rgba(255,255,255,0.12); color:#f0eeff; }
+.modal-header { display:flex; align-items:center; gap:16px; margin-bottom:20px; }
+.modal-book-icon { font-size:40px; }
+.modal-header h3 { font-size:16px; margin-bottom:4px; }
+.modal-header p { font-size:13px; color:#8b86a8; }
+.modal-price-row { display:flex; align-items:center; gap:10px; margin-bottom:20px; }
+.modal-price-old { color:#5a5670; text-decoration:line-through; font-size:15px; }
+.modal-price-main { font-family:'Syne',sans-serif; font-size:36px; font-weight:800; }
+.modal-price-main strong { font-size:48px; }
+.modal-discount {
+  background:rgba(16,185,129,0.15); color:#10b981;
+  border:1px solid rgba(16,185,129,0.3); border-radius:6px;
+  padding:3px 10px; font-size:13px; font-weight:700;
+}
+.modal-features {
+  list-style:none; margin-bottom:24px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.modal-features li { display:flex; align-items:center; gap:10px; font-size:14px; }
+.modal-features li::before {
+  content:'✓'; min-width:20px; height:20px;
+  background:rgba(16,185,129,0.15); color:#10b981;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700; flex-shrink:0;
+}
+.modal-trust {
+  display:flex; justify-content:center; gap:16px; flex-wrap:wrap;
+  margin-top:14px; font-size:12px; color:#8b86a8;
+}
+.modal-viewers {
+  text-align:center; margin-top:12px;
+  font-size:12px; color:#8b86a8;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+}
+.modal-dot {
+  width:8px; height:8px; border-radius:50%; background:#10b981;
+  animation:pulse 1.5s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* ─── EXIT POPUP ─── */
+.exit-emoji { font-size:48px; margin-bottom:12px; }
+.exit-box h3 { font-size:20px; margin-bottom:10px; }
+.exit-box p { color:#8b86a8; font-size:14px; line-height:1.6; margin-bottom:20px; }
+
+/* ─── LIVE COUNTER BADGE ─── */
+.live-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.25);
+  color:#10b981; border-radius:100px; padding:5px 12px; font-size:13px; font-weight:500;
+  margin-bottom:16px;
+}
+.live-badge .live-dot { width:7px; height:7px; border-radius:50%; background:#10b981; animation:pulse 1.5s infinite; }
+
+/* ─── FOR / NOT FOR ─── */
+.fornotfor-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:8px; }
+.fornotfor-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:16px; padding:24px;
+}
+.fornotfor-card.for { border-color:rgba(16,185,129,0.2); }
+.fornotfor-card.notfor { border-color:rgba(239,68,68,0.15); }
+.fornotfor-card h3 { font-size:16px; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+.fornotfor-card ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.fornotfor-card ul li { font-size:14px; color:var(--muted); display:flex; align-items:flex-start; gap:10px; }
+.fornotfor-card.for ul li::before { content:'✓'; color:#10b981; font-weight:700; flex-shrink:0; }
+.fornotfor-card.notfor ul li::before { content:'✕'; color:#ef4444; font-weight:700; flex-shrink:0; }
+
+/* ─── BONUS SECTION ─── */
+.bonus-section { padding:80px 0; }
+.bonus-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.bonus-card {
+  background:var(--surface); border:1px solid rgba(245,158,11,0.2);
+  border-radius:16px; padding:24px; position:relative; overflow:hidden;
+}
+.bonus-card::before { content:'BÔNUS'; position:absolute; top:12px; right:12px; background:rgba(245,158,11,0.15); color:#f59e0b; font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; letter-spacing:.1em; }
+.bonus-card .bonus-icon { font-size:32px; margin-bottom:12px; }
+.bonus-card h3 { font-size:15px; margin-bottom:6px; }
+.bonus-card p { font-size:13px; color:var(--muted); }
+.bonus-value { margin-top:12px; font-size:12px; color:#f59e0b; font-weight:600; }
+
+/* ─── VIDEO SECTION ─── */
+.video-section { padding:80px 0; }
+.video-wrapper {
+  max-width:720px; margin:0 auto;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:16px; overflow:hidden; aspect-ratio:16/9;
+  display:flex; align-items:center; justify-content:center;
+}
+.video-placeholder { text-align:center; color:var(--muted); }
+.video-placeholder .vp-icon { font-size:48px; margin-bottom:12px; }
+
+@media(max-width:768px) {
+  .fornotfor-grid { grid-template-columns:1fr; }
+  .bonus-grid { grid-template-columns:1fr; }
+  #sticky-bar .sticky-text span { display:none; }
+}
+</style>
 <script>
 // ═══════════════════════════════════════
 // SUPABASE
 // ═══════════════════════════════════════
 const SB_URL  = 'https://ihylwxjxjajtdhsnlrfm.supabase.co';
 const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloeWx3eGp4amFqdGRoc25scmZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MDQyNjYsImV4cCI6MjA4OTA4MDI2Nn0.CVVtGeSrg47hSm_WKX-EaQhzaUilrLXhKZnKdJkzepY';
+const SB_H    = { apikey: SB_ANON, Authorization: 'Bearer ' + SB_ANON, 'Content-Type': 'application/json' };
 
 async function fetchRemoteConfig() {
   try {
-    const res = await fetch(
-      `${SB_URL}/rest/v1/iaem30_config?id=eq.1&select=config`,
-      { headers: { apikey: SB_ANON, Authorization: 'Bearer ' + SB_ANON } }
-    );
-    if (!res.ok) return null;
+    const res = await fetch(`${SB_URL}/rest/v1/iaem30_config?id=eq.1&select=config`, { headers: SB_H });
     const rows = await res.json();
-    const cfg = rows?.[0]?.config;
+    const cfg  = rows?.[0]?.config;
     return (cfg && Object.keys(cfg).length > 0) ? cfg : null;
   } catch(e) { return null; }
 }
+
+// ── Tracking ──
+const SESSION_ID = Math.random().toString(36).slice(2) + Date.now();
+const startTime  = Date.now();
+
+async function trackVisit() {
+  const params = new URLSearchParams(location.search);
+  await fetch(`${SB_URL}/rest/v1/iaem30_visitors`, {
+    method: 'POST', headers: SB_H,
+    body: JSON.stringify({
+      session_id:   SESSION_ID,
+      page_path:    location.pathname,
+      referrer:     document.referrer || null,
+      utm_source:   params.get('utm_source'),
+      utm_medium:   params.get('utm_medium'),
+      utm_campaign: params.get('utm_campaign'),
+      device:       /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
+    })
+  });
+}
+
+async function trackCTA(buttonId) {
+  await fetch(`${SB_URL}/rest/v1/iaem30_cta_clicks`, {
+    method: 'POST', headers: SB_H,
+    body: JSON.stringify({ session_id: SESSION_ID, button_id: buttonId })
+  });
+  // Update time_on_page and clicked_cta
+  await fetch(`${SB_URL}/rest/v1/iaem30_visitors?session_id=eq.${SESSION_ID}`, {
+    method: 'PATCH', headers: SB_H,
+    body: JSON.stringify({ clicked_cta: true, time_on_page: Math.round((Date.now() - startTime) / 1000) })
+  });
+}
+
+// ── Live viewer count (random realistic sim) ──
+function updateLiveCount() {
+  const base = 23;
+  const n = base + Math.floor(Math.sin(Date.now() / 30000) * 8 + Math.random() * 6);
+  const c = Math.max(12, n);
+  const el1 = document.getElementById('live-count');
+  const el2 = document.getElementById('modal-viewers-count');
+  if (el1) el1.textContent = c;
+  if (el2) el2.textContent = c;
+}
+setInterval(updateLiveCount, 8000);
 
 // ═══════════════════════════════════════
 // DEFAULTS
@@ -680,7 +984,7 @@ const DEFAULTS = {
   bookPriceBadge: 'R$19,90',
   stat1Num:'1.200+', stat1Label:'criadores impactados',
   stat2Num:'⭐ 4.9', stat2Label:'avaliação média',
-  stat3Num:'7 dias', stat3Label:'de garantia total',
+  stat3Num:'7 dias',  stat3Label:'de garantia total',
   stat4Num:'30 dias', stat4Label:'para transformação',
   whyTitle:'IA: Sua Aliada Criativa',
   whySubtitle:'A Inteligência Artificial está mudando o jogo. Artistas ao redor do mundo já estão usando IA para criar mais rápido, vender melhor e alcançar públicos maiores.',
@@ -696,6 +1000,27 @@ const DEFAULTS = {
   ctaFinalDesc:'Ser criador independente hoje não é apenas criar — é empreender a própria arte. A IA amplifica sua voz.',
   ctaFinalText:'Começar Minha Transformação →',
   footerBrand:'IA em 30',
+  urgencyMinutes: 47,
+  showUrgencyBar: true,
+  showVideoSection: false,
+  videoUrl: '',
+  videoTitle: 'Veja o que você vai receber',
+  liveText: 'pessoas vendo agora',
+  modalCtaText: 'Comprar com Segurança',
+  exitTitle: 'Espera! Não vai perder essa oportunidade...',
+  exitDesc: 'Você estava prestes a sair sem garantir seu acesso. O preço especial pode subir a qualquer momento.',
+  exitCta: 'Quero garantir meu ebook agora →',
+  fnfTitle: 'Este ebook é para você?',
+  forItems: ['Quer monetizar sua criação de forma independente','Está disposto a aprender ferramentas de IA','Busca liberdade financeira e criativa','Quer aproveitar a revolução da IA'],
+  notForItems: ['Busca dinheiro fácil sem esforço','Quer usar IA para copiar estilos alheios','Não está disposto a criar e divulgar'],
+  bonusTitle: 'Comprando hoje você leva também',
+  bonusDesc: 'Bônus disponíveis apenas nesta oferta especial',
+  bonusItems: [
+    { icon:'📋', title:'Checklist de Ferramentas', desc:'Lista completa das melhores ferramentas gratuitas e pagas para cada tipo de criação.' , value:'Valor: R$27' },
+    { icon:'🎯', title:'Guia de Nicho Rápido', desc:'Template para definir seu nicho e posicionamento em menos de 30 minutos.', value:'Valor: R$19' },
+    { icon:'📱', title:'Scripts para Redes Sociais', desc:'10 roteiros prontos para criar conteúdo viral e atrair compradores.', value:'Valor: R$37' },
+  ],
+  stickyCtaText: 'Quero Agora →',
   benefits:[
     {icon:'🧠',title:'Remove Bloqueios Criativos',desc:'Supere o bloqueio com ideias instantâneas e variações ilimitadas para sua criação.'},
     {icon:'⚡',title:'Acelera Seus Processos',desc:'Produza em horas o que levaria dias ou semanas manualmente. Mais tempo para criar.'},
@@ -704,47 +1029,12 @@ const DEFAULTS = {
     {icon:'🛠️',title:'Ferramentas para Cada Criação',desc:'Midjourney, ChatGPT, Soundraw, CapCut IA — tudo explicado passo a passo.'},
     {icon:'🤝',title:'IA Como Aliada',desc:'Você continua sendo o criador. A IA é sua assistente que amplifica sua visão única.'},
   ],
-  learnItems:[
-    '5 formas reais de monetizar sua criação',
-    'Ferramentas de IA passo a passo (ChatGPT, Midjourney, Soundraw)',
-    'Plano de ação de 30 dias completo',
-    'Como posicionar e vender produtos digitais',
-    'Estratégias de conteúdo para crescer nas redes',
-    'Ética e direitos autorais no uso de IA',
-  ],
-  weeks:[
-    {num:'01',title:'Base Criativa',desc:'Defina identidade, escolha nicho e configure ferramentas.'},
-    {num:'02',title:'Produto Digital',desc:'Desenvolva seu produto principal e construa identidade visual.'},
-    {num:'03',title:'Visibilidade',desc:'Produza conteúdo promocional e feche suas primeiras vendas.'},
-    {num:'04',title:'Escala Real',desc:'Melhore qualidade, crie pacotes premium e automatize.'},
-  ],
-  monetizeItems:[
-    {num:'01',title:'Venda da Própria Criação',desc:'Música autoral, ilustrações digitais, fotografias e NFTs.'},
-    {num:'02',title:'Serviços Personalizados',desc:'Capas de álbum, artes para redes sociais e trilhas.'},
-    {num:'03',title:'Produtos Digitais',desc:'Ebooks artísticos, packs de artes e prompts criativos.'},
-    {num:'04',title:'Conteúdo Monetizado',desc:'YouTube, TikTok, Reels e plataformas como Patreon.'},
-    {num:'05',title:'Ensino e Consultoria',desc:'Cursos sobre seu processo e mentorias para criadores.'},
-    {num:'06',title:'Pacotes Premium',desc:'Serviços completos com entrega profissional e recorrente.'},
-  ],
-  testimonials:[
-    {stars:5,text:'"Comecei do zero e em 3 semanas já estava vendendo artes digitais no Instagram. O método é claro e direto ao ponto!"',name:'Ana Silva',role:'Ilustradora Digital',avatar:'🎨'},
-    {stars:5,text:'"Como músico, achei que IA ia competir comigo. Mas esse ebook mostrou como usar como ferramenta. Já ganhei R$1.800 num mês!"',name:'Carlos M.',role:'Produtor Musical',avatar:'🎵'},
-    {stars:5,text:'"Investimento que se pagou em 3 dias. A parte de monetização com conteúdo foi um divisor de águas para minha carreira."',name:'Juliana R.',role:'Designer Gráfica',avatar:'✨'},
-  ],
-  pricingFeatures:[
-    'Ebook completo em PDF (180+ páginas)',
-    '5 formas reais de monetizar sua criação',
-    'Ferramentas de IA passo a passo',
-    'Plano de ação de 30 dias completo',
-    'Dicas de ética e direitos autorais',
-    'Download imediato + Acesso vitalício',
-  ],
-  faqs:[
-    {q:'Preciso ter conhecimento prévio em IA?',a:'Não! O ebook foi feito do zero ao avançado, com tutoriais passo a passo fáceis de seguir.'},
-    {q:'Funciona para qualquer tipo de artista?',a:'Sim! Abordamos ferramentas específicas para músicos, ilustradores, designers, escritores, fotógrafos e videomakers.'},
-    {q:'Usar IA não vai tirar minha autenticidade?',a:'Pelo contrário. IA é uma ferramenta para acelerar sua produção técnica, permitindo que você foque mais na sua essência criativa.'},
-    {q:'Quanto tempo leva para ter resultados?',a:'O plano é estruturado para 30 dias. Muitos leitores relatam resultados nas primeiras 2 semanas de aplicação.'},
-  ]
+  learnItems:['5 formas reais de monetizar sua criação','Ferramentas de IA passo a passo (ChatGPT, Midjourney, Soundraw)','Plano de ação de 30 dias completo','Como posicionar e vender produtos digitais','Estratégias de conteúdo para crescer nas redes','Ética e direitos autorais no uso de IA'],
+  weeks:[{num:'01',title:'Base Criativa',desc:'Defina identidade, escolha nicho e configure ferramentas.'},{num:'02',title:'Produto Digital',desc:'Desenvolva seu produto principal e construa identidade visual.'},{num:'03',title:'Visibilidade',desc:'Produza conteúdo promocional e feche suas primeiras vendas.'},{num:'04',title:'Escala Real',desc:'Melhore qualidade, crie pacotes premium e automatize.'}],
+  monetizeItems:[{num:'01',title:'Venda da Própria Criação',desc:'Música autoral, ilustrações digitais, fotografias e NFTs.'},{num:'02',title:'Serviços Personalizados',desc:'Capas de álbum, artes para redes sociais e trilhas.'},{num:'03',title:'Produtos Digitais',desc:'Ebooks artísticos, packs de artes e prompts criativos.'},{num:'04',title:'Conteúdo Monetizado',desc:'YouTube, TikTok, Reels e plataformas como Patreon.'},{num:'05',title:'Ensino e Consultoria',desc:'Cursos sobre seu processo e mentorias para criadores.'},{num:'06',title:'Pacotes Premium',desc:'Serviços completos com entrega profissional e recorrente.'}],
+  testimonials:[{stars:5,text:'"Comecei do zero e em 3 semanas já estava vendendo artes digitais no Instagram. O método é claro e direto ao ponto!"',name:'Ana Silva',role:'Ilustradora Digital',avatar:'🎨'},{stars:5,text:'"Como músico, achei que IA ia competir comigo. Mas esse ebook mostrou como usar como ferramenta. Já ganhei R$1.800 num mês!"',name:'Carlos M.',role:'Produtor Musical',avatar:'🎵'},{stars:5,text:'"Investimento que se pagou em 3 dias. A parte de monetização com conteúdo foi um divisor de águas para minha carreira."',name:'Juliana R.',role:'Designer Gráfica',avatar:'✨'}],
+  pricingFeatures:['Ebook completo em PDF (180+ páginas)','5 formas reais de monetizar sua criação','Ferramentas de IA passo a passo','Plano de ação de 30 dias completo','Dicas de ética e direitos autorais','Download imediato + Acesso vitalício'],
+  faqs:[{q:'Preciso ter conhecimento prévio em IA?',a:'Não! O ebook foi feito do zero ao avançado, com tutoriais passo a passo fáceis de seguir.'},{q:'Funciona para qualquer tipo de artista?',a:'Sim! Abordamos ferramentas específicas para músicos, ilustradores, designers, escritores, fotógrafos e videomakers.'},{q:'Usar IA não vai tirar minha autenticidade?',a:'Pelo contrário. IA é uma ferramenta para acelerar sua produção técnica, permitindo que você foque mais na sua essência criativa.'},{q:'Quanto tempo leva para ter resultados?',a:'O plano é estruturado para 30 dias. Muitos leitores relatam resultados nas primeiras 2 semanas de aplicação.'}]
 };
 
 // ═══════════════════════════════════════
@@ -752,9 +1042,12 @@ const DEFAULTS = {
 // ═══════════════════════════════════════
 function applyConfig(cfg) {
   const link = cfg.productLink || DEFAULTS.productLink;
-  ['hero-cta-btn','header-cta-btn','pricing-cta-btn','cta-final-btn'].forEach(id => {
-    const el = document.getElementById(id); if(el) el.href = link;
-  });
+
+  // Modal CTA link
+  const mBtn = document.getElementById('modal-cta-btn');
+  if(mBtn) mBtn.href = link;
+
+  // Simple text fields
   const fields = {
     'hero-badge':'heroBadge','hero-title':'heroTitle','hero-subtitle':'heroSubtitle',
     'hero-cta-text':'heroCtaText','book-title':'bookTitle','book-sub':'bookSub',
@@ -771,46 +1064,189 @@ function applyConfig(cfg) {
     'pricing-cta-text':'pricingCtaText','guarantee-text':'guaranteeText',
     'cta-final-title':'ctaFinalTitle','cta-final-desc':'ctaFinalDesc',
     'cta-final-text':'ctaFinalText','footer-brand':'footerBrand',
+    'live-text':'liveText',
+    'modal-cta-text':'modalCtaText',
+    'modal-price-old':'priceOld','modal-price-main':'priceMain','modal-price-cents':'priceCents',
+    'modal-viewers-text':'liveText',
+    'exit-title':'exitTitle','exit-desc':'exitDesc','exit-cta':'exitCta',
+    'fnf-title':'fnfTitle',
+    'bonus-title':'bonusTitle','bonus-desc':'bonusDesc',
+    'video-title':'videoTitle',
+    'sticky-cta-text':'stickyCtaText',
+    'sticky-title':'bookTitle',
   };
   for(const [id,key] of Object.entries(fields)){
     const el=document.getElementById(id); if(el&&cfg[key]!=null) el.innerHTML=cfg[key];
   }
-  const benefitsEl=document.getElementById('benefits-grid');
-  if(benefitsEl&&cfg.benefits) benefitsEl.innerHTML=cfg.benefits.map(b=>`
+
+  // Sticky price label
+  const spl = document.getElementById('sticky-price-label');
+  if(spl) spl.textContent = `R$${cfg.priceMain||'19'}${cfg.priceCents||',90'} — oferta por tempo limitado`;
+
+  // All CTA buttons (except modal which has its own href)
+  ['hero-cta-btn','header-cta-btn','pricing-cta-btn','cta-final-btn'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.onclick = (e)=>{ e.preventDefault(); openModal(id); };
+  });
+
+  // Benefits
+  const bEl=document.getElementById('benefits-grid');
+  if(bEl&&cfg.benefits) bEl.innerHTML=cfg.benefits.map(b=>`
     <div class="benefit-card"><div class="benefit-icon">${b.icon}</div><h3>${b.title}</h3><p>${b.desc}</p></div>`).join('');
-  const learnEl=document.getElementById('learn-list');
-  if(learnEl&&cfg.learnItems) learnEl.innerHTML=cfg.learnItems.map(i=>`<li>${i}</li>`).join('');
-  const weeksEl=document.getElementById('weeks-grid');
-  if(weeksEl&&cfg.weeks) weeksEl.innerHTML=cfg.weeks.map(w=>`
+
+  // Learn list
+  const lEl=document.getElementById('learn-list');
+  if(lEl&&cfg.learnItems) lEl.innerHTML=cfg.learnItems.map(i=>`<li>${i}</li>`).join('');
+
+  // Weeks
+  const wEl=document.getElementById('weeks-grid');
+  if(wEl&&cfg.weeks) wEl.innerHTML=cfg.weeks.map(w=>`
     <div class="week-card"><div class="week-num">${w.num}</div><div><h4>${w.title}</h4><p>${w.desc}</p></div></div>`).join('');
-  const monetizeEl=document.getElementById('monetize-grid');
-  if(monetizeEl&&cfg.monetizeItems) monetizeEl.innerHTML=cfg.monetizeItems.map(m=>`
+
+  // Monetize
+  const mEl=document.getElementById('monetize-grid');
+  if(mEl&&cfg.monetizeItems) mEl.innerHTML=cfg.monetizeItems.map(m=>`
     <div class="monetize-card"><span class="m-num">${m.num}</span><h3>${m.title}</h3><p>${m.desc}</p></div>`).join('');
-  const testimonialsEl=document.getElementById('testimonials-grid');
-  if(testimonialsEl&&cfg.testimonials) testimonialsEl.innerHTML=cfg.testimonials.map(t=>`
+
+  // Testimonials
+  const tEl=document.getElementById('testimonials-grid');
+  if(tEl&&cfg.testimonials) tEl.innerHTML=cfg.testimonials.map(t=>`
     <div class="testimonial-card"><div class="stars">${'★'.repeat(t.stars)}</div><p class="testimonial-text">${t.text}</p>
     <div class="testimonial-author"><div class="author-avatar">${t.avatar}</div>
     <div><div class="author-name">${t.name}</div><div class="author-role">${t.role}</div></div></div></div>`).join('');
+
+  // Pricing features
   const pfEl=document.getElementById('pricing-features');
   if(pfEl&&cfg.pricingFeatures) pfEl.innerHTML=cfg.pricingFeatures.map(f=>`<li>${f}</li>`).join('');
+
+  // Modal features
+  const mfEl=document.getElementById('modal-features');
+  if(mfEl&&cfg.pricingFeatures) mfEl.innerHTML=cfg.pricingFeatures.slice(0,5).map(f=>`<li>${f}</li>`).join('');
+
+  // FAQs
   const faqEl=document.getElementById('faq-grid');
   if(faqEl&&cfg.faqs) faqEl.innerHTML=cfg.faqs.map((f,i)=>`
     <div class="faq-item" id="faq-${i}">
       <div class="faq-q" onclick="toggleFaq(${i})">${f.q}<span class="faq-icon">+</span></div>
       <div class="faq-a">${f.a}</div></div>`).join('');
+
+  // For / Not For
+  const fnfEl=document.getElementById('fornotfor-grid');
+  if(fnfEl){
+    const fi=(cfg.forItems||DEFAULTS.forItems).map(i=>`<li>${i}</li>`).join('');
+    const ni=(cfg.notForItems||DEFAULTS.notForItems).map(i=>`<li>${i}</li>`).join('');
+    fnfEl.innerHTML=`
+      <div class="fornotfor-card for"><h3>✅ É para você se...</h3><ul>${fi}</ul></div>
+      <div class="fornotfor-card notfor"><h3>❌ NÃO é para você se...</h3><ul>${ni}</ul></div>`;
+  }
+
+  // Bonus
+  const bonusEl=document.getElementById('bonus-grid');
+  if(bonusEl){
+    const items=cfg.bonusItems||DEFAULTS.bonusItems;
+    bonusEl.innerHTML=items.map(b=>`
+      <div class="bonus-card">
+        <div class="bonus-icon">${b.icon}</div>
+        <h3>${b.title}</h3><p>${b.desc}</p>
+        <div class="bonus-value">${b.value}</div>
+      </div>`).join('');
+  }
+
+  // Video section
+  const vs=document.getElementById('video-section');
+  if(vs) vs.style.display=(cfg.showVideoSection&&cfg.videoUrl)?'block':'none';
+  if(cfg.videoUrl&&cfg.showVideoSection){
+    const vw=document.getElementById('video-wrapper');
+    // Convert YouTube URL to embed
+    const ytMatch=cfg.videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&\n?]+)/);
+    if(ytMatch&&vw){
+      vw.innerHTML=`<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${ytMatch[1]}" frameborder="0" allowfullscreen style="border:none"></iframe>`;
+    }
+  }
+
+  // Urgency bar
+  if(cfg.showUrgencyBar===false) document.getElementById('urgency-bar').style.display='none';
+  else startCountdown(cfg.urgencyMinutes||47);
+
   document.getElementById('footer-year').textContent=new Date().getFullYear();
 }
 
-function toggleFaq(i) {
-  document.getElementById('faq-'+i).classList.toggle('open');
+function toggleFaq(i) { document.getElementById('faq-'+i).classList.toggle('open'); }
+
+// ═══════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════
+function openModal(sourceId) {
+  document.getElementById('buy-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+  trackCTA(sourceId);
+}
+function closeModal() {
+  document.getElementById('buy-modal').classList.remove('open');
+  document.body.style.overflow='';
 }
 
 // ═══════════════════════════════════════
-// INIT — Supabase first, fallback to defaults
+// EXIT INTENT
 // ═══════════════════════════════════════
-(async () => {
-  const remote = await fetchRemoteConfig();
-  applyConfig(remote ? { ...DEFAULTS, ...remote } : DEFAULTS);
+let exitShown=false;
+document.addEventListener('mouseleave', e=>{
+  if(e.clientY<=0 && !exitShown){
+    exitShown=true;
+    document.getElementById('exit-popup').classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+});
+// Mobile: show exit intent after 60s of inactivity
+let mobileExitTimer=setTimeout(()=>{
+  if(!exitShown && /Mobi|Android/i.test(navigator.userAgent)){
+    exitShown=true;
+    document.getElementById('exit-popup').classList.add('open');
+  }
+}, 60000);
+
+function closeExit() {
+  document.getElementById('exit-popup').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ═══════════════════════════════════════
+// STICKY BAR
+// ═══════════════════════════════════════
+window.addEventListener('scroll',()=>{
+  const bar=document.getElementById('sticky-bar');
+  bar.style.display = window.scrollY > 600 ? 'block' : 'none';
+});
+
+// ═══════════════════════════════════════
+// COUNTDOWN TIMER
+// ═══════════════════════════════════════
+function startCountdown(minutes) {
+  const key='iaem30_timer_end';
+  let end=sessionStorage.getItem(key);
+  if(!end || Date.now()>Number(end)){
+    end=Date.now()+(minutes*60*1000);
+    sessionStorage.setItem(key,end);
+  }
+  function tick(){
+    const diff=Number(end)-Date.now();
+    if(diff<=0){ sessionStorage.removeItem(key); startCountdown(minutes); return; }
+    const h=Math.floor(diff/3600000);
+    const m=Math.floor((diff%3600000)/60000);
+    const s=Math.floor((diff%60000)/1000);
+    const el=document.getElementById('countdown');
+    if(el) el.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+  tick(); setInterval(tick,1000);
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+(async()=>{
+  const remote=await fetchRemoteConfig();
+  applyConfig(remote?{...DEFAULTS,...remote}:DEFAULTS);
+  trackVisit();
+  updateLiveCount();
 })();
 </script>
 </body>
